@@ -1,11 +1,11 @@
 {
   "alternatemix" : {
-    "alternatemix.destinationbrowsableField" : "/Users/franclab/Développement/lyturgie/tex/bible/Ez 33-37.pdf",
+    "alternatemix.destinationbrowsableField" : "/Users/franclab/Développement/bible/Ezechiel/Ez 33-37.pdf",
     "compress" : "true",
     "input.reverse.1" : "false",
     "input.reverse.0" : "false",
-    "input.0" : "/Users/franclab/Développement/lyturgie/tex/bible/Ez 33-37 TOB.pdf",
-    "input.1" : "/Users/franclab/Développement/lyturgie/tex/bible/Ez 33-37 Heb.pdf",
+    "input.0" : "/Users/franclab/Développement/bible/Ezechiel/Ez 33-37 TOB.pdf",
+    "input.1" : "/Users/franclab/Développement/bible/Ezechiel/Ez 33-37 Heb.pdf",
     "version" : "VERSION_1_5",
     "input.size" : "2",
     "input.step.0" : "1",
