@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.16.0 (TeX Live 2023)  (format=lualatex 2023.4.4)  20 JAN 2025 18:58
+This is LuaHBTeX, Version 1.16.0 (TeX Live 2023)  (format=lualatex 2023.4.4)  21 JAN 2025 10:54
  restricted system commands enabled.
  file:line:error style messages enabled.
 **"Ez 33-37 TOB.tex"
@@ -1151,25 +1151,25 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 25.
 
-[1] [2] ("./Ez 33-37 TOB.aux"))
+[1] [2] [3] [4] ("./Ez 33-37 TOB.aux"))
 
 Here is how much of LuaTeX's memory you used:
- 20061 strings out of 478278
+ 20062 strings out of 478278
  125056,1977958 words of node,token memory allocated
- 1740 words of node memory still in use:
-   5 hlist, 1 vlist, 1 rule, 1 local_par, 68 glue, 3 kern, 2 penalty, 6 glyph, 3
-48 attribute, 53 glue_spec, 51 attribute_list, 1 write nodes
-   avail lists: 1:3,2:2205,3:381,4:192,5:312,6:51,7:6689,8:2,9:299,10:4,11:304
- 39847 multiletter control sequences out of 65536+600000
+ 2497 words of node memory still in use:
+   5 hlist, 1 vlist, 1 rule, 1 local_par, 105 glue, 4 kern, 2 penalty, 1 margin_
+kern, 5 glyph, 565 attribute, 53 glue_spec, 82 attribute_list, 1 write nodes
+   avail lists: 1:3,2:2021,3:381,4:191,5:380,6:51,7:6653,8:2,9:299,10:4,11:306
+ 39848 multiletter control sequences out of 65536+600000
  77 fonts using 15395127 bytes
  87i,6n,110p,1010b,344s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2023/texmf-dist/fonts/opentype/public/libertine/LinLibertine
 _RB.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/libertine/LinL
 ibertine_R.otf>
-Output written on Ez 33-37 TOB.pdf (3 pages, 21745 bytes).
+Output written on Ez 33-37 TOB.pdf (5 pages, 27301 bytes).
 
-PDF statistics: 28 PDF objects out of 1000 (max. 8388607)
- 16 compressed objects within 1 object stream
+PDF statistics: 34 PDF objects out of 1000 (max. 8388607)
+ 20 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 131072)
  1 words of extra memory for PDF output out of 10000 (max. 100000000)
 

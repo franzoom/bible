@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.16.0 (TeX Live 2023)  (format=lualatex 2023.4.4)  20 JAN 2025 19:00
+This is LuaHBTeX, Version 1.16.0 (TeX Live 2023)  (format=lualatex 2023.4.4)  21 JAN 2025 11:07
  restricted system commands enabled.
  file:line:error style messages enabled.
 **"Ez 33-37 Heb.tex"
@@ -850,12 +850,12 @@ braces):
 >  {french/Localnumeral}  =>  {polyglossia@C@localnumeral}
 >  {french/DefineCommandsCmd}  =>  {xpg_define_language_commands:e}.
 Module polyglossia Info: Language data for french
-(polyglossia)            synonyms	patois,francais
 (polyglossia)            hyphenation	
+(polyglossia)            synonyms	patois,francais
 (polyglossia)            patterns	hyph-fr.pat.txt
 (polyglossia)            loader	loadhyph-fr.tex
-(polyglossia)            righthyphenmin	2
-(polyglossia)            lefthyphenmin	2 on input line 14
+(polyglossia)            lefthyphenmin	2
+(polyglossia)            righthyphenmin	2 on input line 14
 Module polyglossia Info: Language french was not yet loaded; created with id 2 o
 n input line 14
 Lua-only attribute polyglossia_punct = 4
@@ -1021,23 +1021,23 @@ braces):
 >  {greek/Localnumeral}  =>  {Greeknumerals}
 >  {greek/DefineCommandsCmd}  =>  {xpg_define_language_commands:e}.
 Module polyglossia Info: Language data for greek
-(polyglossia)            synonyms	polygreek
 (polyglossia)            hyphenation	
+(polyglossia)            synonyms	polygreek
 (polyglossia)            patterns	hyph-el-polyton.pat.txt
 (polyglossia)            loader	loadhyph-el-polyton.tex
-(polyglossia)            righthyphenmin	1
-(polyglossia)            lefthyphenmin	1 on input line 16
+(polyglossia)            lefthyphenmin	1
+(polyglossia)            righthyphenmin	1 on input line 16
 Module polyglossia Info: Language greek was not yet loaded; created with id 3 on
  input line 16
 
 (/usr/local/texlive/2023/texmf-dist/tex/latex/polyglossia/xgreek-fixes.def)
 Module polyglossia Info: Language data for monogreek
-(polyglossia)            synonyms	
 (polyglossia)            hyphenation	
+(polyglossia)            synonyms	
 (polyglossia)            patterns	hyph-el-monoton.pat.txt
 (polyglossia)            loader	loadhyph-el-monoton.tex
-(polyglossia)            righthyphenmin	1
-(polyglossia)            lefthyphenmin	1 on input line 99
+(polyglossia)            lefthyphenmin	1
+(polyglossia)            righthyphenmin	1 on input line 99
 Module polyglossia Info: Language monogreek was not yet loaded; created with id 
 4 on input line 99
 Package polyglossia Info: Option: Monotonic Greek.
@@ -1443,6 +1443,101 @@ LaTeX Info: Redefining \ttfamily on input line 58.
 LaTeX Info: Redefining \rmfamily on input line 59.
 LaTeX Info: Redefining \sffamily on input line 59.
 LaTeX Info: Redefining \ttfamily on input line 59.
+ [2]
+LaTeX Info: Redefining \rmfamily on input line 66.
+LaTeX Info: Redefining \sffamily on input line 66.
+LaTeX Info: Redefining \ttfamily on input line 66.
+LaTeX Info: Redefining \rmfamily on input line 67.
+LaTeX Info: Redefining \sffamily on input line 67.
+LaTeX Info: Redefining \ttfamily on input line 67.
+LaTeX Info: Redefining \rmfamily on input line 68.
+LaTeX Info: Redefining \sffamily on input line 68.
+LaTeX Info: Redefining \ttfamily on input line 68.
+LaTeX Info: Redefining \rmfamily on input line 69.
+LaTeX Info: Redefining \sffamily on input line 69.
+LaTeX Info: Redefining \ttfamily on input line 69.
+LaTeX Info: Redefining \rmfamily on input line 70.
+LaTeX Info: Redefining \sffamily on input line 70.
+LaTeX Info: Redefining \ttfamily on input line 70.
+LaTeX Info: Redefining \rmfamily on input line 71.
+LaTeX Info: Redefining \sffamily on input line 71.
+LaTeX Info: Redefining \ttfamily on input line 71.
+LaTeX Info: Redefining \rmfamily on input line 72.
+LaTeX Info: Redefining \sffamily on input line 72.
+LaTeX Info: Redefining \ttfamily on input line 72.
+LaTeX Info: Redefining \rmfamily on input line 73.
+LaTeX Info: Redefining \sffamily on input line 73.
+LaTeX Info: Redefining \ttfamily on input line 73.
+LaTeX Info: Redefining \rmfamily on input line 76.
+LaTeX Info: Redefining \sffamily on input line 76.
+LaTeX Info: Redefining \ttfamily on input line 76.
+LaTeX Info: Redefining \rmfamily on input line 77.
+LaTeX Info: Redefining \sffamily on input line 77.
+LaTeX Info: Redefining \ttfamily on input line 77.
+LaTeX Info: Redefining \rmfamily on input line 80.
+LaTeX Info: Redefining \sffamily on input line 80.
+LaTeX Info: Redefining \ttfamily on input line 80.
+LaTeX Info: Redefining \rmfamily on input line 81.
+LaTeX Info: Redefining \sffamily on input line 81.
+LaTeX Info: Redefining \ttfamily on input line 81.
+LaTeX Info: Redefining \rmfamily on input line 82.
+LaTeX Info: Redefining \sffamily on input line 82.
+LaTeX Info: Redefining \ttfamily on input line 82.
+LaTeX Info: Redefining \rmfamily on input line 83.
+LaTeX Info: Redefining \sffamily on input line 83.
+LaTeX Info: Redefining \ttfamily on input line 83.
+LaTeX Info: Redefining \rmfamily on input line 84.
+LaTeX Info: Redefining \sffamily on input line 84.
+LaTeX Info: Redefining \ttfamily on input line 84.
+ [3]
+LaTeX Info: Redefining \rmfamily on input line 85.
+LaTeX Info: Redefining \sffamily on input line 85.
+LaTeX Info: Redefining \ttfamily on input line 85.
+LaTeX Info: Redefining \rmfamily on input line 86.
+LaTeX Info: Redefining \sffamily on input line 86.
+LaTeX Info: Redefining \ttfamily on input line 86.
+LaTeX Info: Redefining \rmfamily on input line 87.
+LaTeX Info: Redefining \sffamily on input line 87.
+LaTeX Info: Redefining \ttfamily on input line 87.
+LaTeX Info: Redefining \rmfamily on input line 88.
+LaTeX Info: Redefining \sffamily on input line 88.
+LaTeX Info: Redefining \ttfamily on input line 88.
+LaTeX Info: Redefining \rmfamily on input line 91.
+LaTeX Info: Redefining \sffamily on input line 91.
+LaTeX Info: Redefining \ttfamily on input line 91.
+LaTeX Info: Redefining \rmfamily on input line 92.
+LaTeX Info: Redefining \sffamily on input line 92.
+LaTeX Info: Redefining \ttfamily on input line 92.
+LaTeX Info: Redefining \rmfamily on input line 93.
+LaTeX Info: Redefining \sffamily on input line 93.
+LaTeX Info: Redefining \ttfamily on input line 93.
+LaTeX Info: Redefining \rmfamily on input line 94.
+LaTeX Info: Redefining \sffamily on input line 94.
+LaTeX Info: Redefining \ttfamily on input line 94.
+LaTeX Info: Redefining \rmfamily on input line 95.
+LaTeX Info: Redefining \sffamily on input line 95.
+LaTeX Info: Redefining \ttfamily on input line 95.
+LaTeX Info: Redefining \rmfamily on input line 96.
+LaTeX Info: Redefining \sffamily on input line 96.
+LaTeX Info: Redefining \ttfamily on input line 96.
+LaTeX Info: Redefining \rmfamily on input line 97.
+LaTeX Info: Redefining \sffamily on input line 97.
+LaTeX Info: Redefining \ttfamily on input line 97.
+LaTeX Info: Redefining \rmfamily on input line 98.
+LaTeX Info: Redefining \sffamily on input line 98.
+LaTeX Info: Redefining \ttfamily on input line 98.
+LaTeX Info: Redefining \rmfamily on input line 99.
+LaTeX Info: Redefining \sffamily on input line 99.
+LaTeX Info: Redefining \ttfamily on input line 99.
+LaTeX Info: Redefining \rmfamily on input line 100.
+LaTeX Info: Redefining \sffamily on input line 100.
+LaTeX Info: Redefining \ttfamily on input line 100.
+LaTeX Info: Redefining \rmfamily on input line 101.
+LaTeX Info: Redefining \sffamily on input line 101.
+LaTeX Info: Redefining \ttfamily on input line 101.
+LaTeX Info: Redefining \rmfamily on input line 102.
+LaTeX Info: Redefining \sffamily on input line 102.
+LaTeX Info: Redefining \ttfamily on input line 102.
 The property list \polyglossia@langsetup contains the pairs (without outer
 braces):
 >  {latex/script}  =>  {latin}
@@ -1547,7 +1642,7 @@ The property list \__xpg_alias contains the pairs (without outer braces):
 >  {polutonikogreek/target}  =>  {greek}
 >  {polutonikogreek/variant}  =>  {polytonic}
 >  {polutonikogreek/options}  =>  {variant=polytonic}.
- [2]
+ [4]
 ("./Ez 33-37 Heb.aux"
 LaTeX Info: Redefining \rmfamily on input line 3.
 LaTeX Info: Redefining \sffamily on input line 3.
@@ -1556,21 +1651,21 @@ luaotfload | aux : font no 23 (nil) defines no feature for script latn with lang
 uage fra))
 
 Here is how much of LuaTeX's memory you used:
- 19608 strings out of 478278
+ 19609 strings out of 478278
  125056,1977958 words of node,token memory allocated
  459 words of node memory still in use:
    3 hlist, 1 vlist, 1 rule, 3 glue, 4 kern, 1 penalty, 1 glyph, 7 attribute, 54
  glue_spec, 5 attribute_list, 1 write nodes
-   avail lists: 1:4,2:872,3:320,4:144,5:908,6:35,7:4979,8:2,9:283,10:1
- 39377 multiletter control sequences out of 65536+600000
+   avail lists: 1:4,2:872,3:320,4:144,5:925,6:35,7:4979,8:2,9:283,10:1
+ 39378 multiletter control sequences out of 65536+600000
  72 fonts using 14771095 bytes
  87i,5n,110p,1010b,470s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </Users/franclab/Library/Fonts/SBL_Hbrw.ttf></usr/local/texlive/2023/texmf-dist/
 fonts/opentype/public/libertine/LinLibertine_R.otf>
-Output written on Ez 33-37 Heb.pdf (2 pages, 37813 bytes).
+Output written on Ez 33-37 Heb.pdf (4 pages, 47703 bytes).
 
-PDF statistics: 26 PDF objects out of 1000 (max. 8388607)
- 14 compressed objects within 1 object stream
+PDF statistics: 32 PDF objects out of 1000 (max. 8388607)
+ 18 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 131072)
  1 words of extra memory for PDF output out of 10000 (max. 100000000)
 
