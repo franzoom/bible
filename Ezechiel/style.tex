@@ -5,7 +5,7 @@
 \def \parSpace{\vskip 1.2em}
 \def \decalage{\hspace*{0.5cm}~}
 \def \pscolor{red} %couleur de la numérotation des versets
-
+\usepackage{titlesec} %gestion des formats de titre
 \usepackage{geometry}
 \usepackage{xcolor}
 \usepackage{graphicx}
@@ -15,6 +15,16 @@
 \usepackage{adjmulticol}
 \usepackage{fancyhdr}
 
+\usepackage[french]{babel}
+\usepackage{libertine}
+\usepackage{pifont}
+
+\usepackage{polyglossia}
+\setdefaultlanguage{french}
+\setotherlanguages{hebrew,greek}
+\newfontfamily\hebrewfont[Script=Hebrew]{SBL Hebrew}
+\newfontfamily\greekfont[Script=Greek]{SBL Greek}
+
 \geometry{
   twoside=false,
   left=20mm,
@@ -22,3 +32,6 @@
   top=20mm,
   bottom=20mm
   }
+  
+  \titleformat{\section}
+  {\Large\bfseries\scshape}{\thesection}{5em}{}
