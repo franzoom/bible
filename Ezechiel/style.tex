@@ -4,7 +4,6 @@
 \def \verseSpace{\vskip 0.45em}
 \def \parSpace{\vskip 1.2em}
 \def \decalage{\hspace*{0.5cm}~}
-\usepackage{fourier}
 \def \pscolor{red} %couleur de la numérotation des versets
 \usepackage{titlesec} %gestion des formats de titre
 \usepackage{geometry}
@@ -15,12 +14,13 @@
 \usepackage{graphicx}
 \usepackage{adjmulticol}
 \usepackage{fancyhdr}
-\usepackage{amsmath}
+\usepackage{amsmath} %pour permettre de faire des tableaux (et gérer les accolades)
 \usepackage[french]{babel}
-\usepackage{libertine}
-\usepackage{pifont}
-\usepackage{ulem} %pour entourer les mots
-\usepackage{mdframed} %pour faire des lignes verticales
+\usepackage{libertine} %police utilisée
+\usepackage{pifont} %bibliothèque de symboles
+\usepackage{twemojis} %bibliothèque de symboles
+\usepackage[normalem]{ulem} %pour entourer les mots
+
 
 \usepackage{polyglossia}
 \setdefaultlanguage{french}
@@ -28,6 +28,7 @@
 \newfontfamily\hebrewfont[Script=Hebrew]{SBL Hebrew}
 \newfontfamily\greekfont[Script=Greek]{SBL Greek}
 
+\usepackage{mdframed} %pour faire des lignes verticales
 \newmdenv[ %config de l'environnement de mdframes pour avoir une barre vertical à gauche du texte
   topline=false,
   bottomline=false,
