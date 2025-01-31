@@ -1,7 +1,7 @@
 import fitz  # PyMuPDF
 
 # Ouvrir les documents PDF
-doc_a = fitz.open("Cous sur Ezechiel.pdf")
+doc_a = fitz.open("Cours sur Ezechiel.pdf")
 doc_b = fitz.open("Ez 33-37 Heb.pdf")
 
 # Créer un nouveau PDF pour le document final

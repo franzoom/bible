@@ -1,31 +1,39 @@
 \documentclass[12pt,a4paper,titlepage]{article}
-\include {./style.tex}
+\author{François Labadens}
+\input{./style.tex}
+\usepackage{array}
 
 %%%%% variables pour la numérotation des versets %%%%%%
 \def \pslabelsep{0.2em} %distance entre le numéro de verset et le texte
 \def \psleftmargin{0em} %marge à gauche lors de la numérotation des versets de psaumes
 
+
+
+%%%% définition de la page de titre %%%%
 \title{\fontsize{50}{60}\selectfont \texthebrew{יְחֶזְקֵאל}\\
 \fontsize{40}{50}\selectfont \textsc{Ézéchiel} }
 \date{}
+
+
+
 \begin{document}
+
 \maketitle
-\vfill
-
-\newpage 
-
+%\thispagestyle{plain} % Garde le style de la première page simple
+\newpage
+\setcounter{page}{2} % Commence la numérotation des pages à 2 
 \input{"Ez prophetisme.tex"}
-\newpage 
-\input {"Ez plan"}
 \newpage
-\include{"Ez vocabulaire.tex"}
+\input{"Ez plan"}
 \newpage
-\include{"Ez introduction.tex"}
+\input{Ez vocabulaire.tex}
+\newpage
+\input{"Ez_introduction.tex"}
 \newpage
 \input{"Ez chronologie.tex"}
 \vfill
 \input{"Ez bibliographie.tex"}
 \newpage
-\input {"Ez 33-37 TOB.tex"}
+\input{"Ez 33-37 TOB.tex"}
 
 \end{document}

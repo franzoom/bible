@@ -8,3 +8,12 @@ La police pour le texte "romain" est Libertinus
 Lors les langues sont alternées selon les pages (typiquement hébreu à gauche, français à droite), j'utilise deux fichiers tex différents, compilés en deux pdf qui sont assemblés dans le document final par le script ptyhon assemblage.py.
 Pour Ezechiel, ce script prend sans les toucher les 4 premières pages du document "TOB", puis ensuite alterne avec le document "Hébreu".
 Le script python appelle la librairie pymupd qu'il faut installer.
+
+La compilation se fait par LuaLaTeX
+
+
+Pour définir un environnement LaTeX dans VSCode, installer l'extension LaTeX Workshop, et installer latexindent:
+brew install perl
+brew install cpanm
+cpanm YAML::Tiny
+cpanm File::HomeDir

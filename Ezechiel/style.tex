@@ -9,10 +9,9 @@
 \usepackage{geometry}
 \usepackage{xcolor}
 \usepackage{graphicx}
-\usepackage{multicol} 
+%\usepackage{multicol}
 \usepackage{microtype} %utiliser toutes les caractéristiques de la police et pour condenser les lignes
-\usepackage{graphicx}
-\usepackage{adjmulticol}
+%\usepackage{adjmulticol}
 \usepackage{fancyhdr}
 \usepackage{amsmath} %pour permettre de faire des tableaux (et gérer les accolades)
 \usepackage[french]{babel}
@@ -48,7 +47,14 @@
   right=20mm,
   top=20mm,
   bottom=20mm
-  }
-  
-  \titleformat{\section}
-  {\Large\bfseries\scshape}{\thesection}{5em}{}
+}
+
+\titleformat{\section}
+{\Large\bfseries\scshape}{\thesection}{5em}{}
+
+
+%%%gestion de en-tête et pieds de page
+\pagestyle{fancy}
+\fancyhf{} % Efface les en-têtes et pieds de page par défaut
+\fancyfoot[R]{\footnotesize{page \thepage}} % Affiche le numéro de page centré dans le pied de page
+\renewcommand{\headrulewidth}{0pt} % Supprime la ligne horizontale en haut de chaque page
