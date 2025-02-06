@@ -1,5 +1,6 @@
 \documentclass[12pt,a4paper,titlepage]{article}
-\author{François Labadens}
+\author{}
+\date{}
 \input{./style.tex}
 \usepackage{array}
 
@@ -11,8 +12,13 @@
 
 %%%% définition de la page de titre %%%%
 \title{\fontsize{50}{60}\selectfont \texthebrew{יְחֶזְקֵאל}\\
-\fontsize{40}{50}\selectfont \textsc{Ézéchiel} }
-\date{}
+\fontsize{40}{50}\selectfont \textsc{Ézéchiel} \par
+\normalsize François Labadens \\
+\vspace{8em}
+\begin{center}
+    \includegraphics[width=5cm]{../assets/seminaire_lyon.png}
+\end{center} }
+
 
 
 
@@ -20,19 +26,26 @@
 
 \maketitle
 %\thispagestyle{plain} % Garde le style de la première page simple
+
+
 \newpage
 \setcounter{page}{2} % Commence la numérotation des pages à 2 
 \input{"Ez prophetisme.tex"}
 \newpage
+\input{"Ez chronologie.tex"}
+\vspace{2em}
 \input{"Ez plan"}
 \newpage
 \input{Ez vocabulaire.tex}
 \newpage
 \input{"Ez_introduction.tex"}
 \newpage
-\input{"Ez chronologie.tex"}
-\vfill
 \input{"Ez bibliographie.tex"}
+\vspace{2em}
+\section*{Lecture du texte (Ézéchiel 2, puis 33 à 37)}
+\textit{Le texte en hébreu est pris de la Biblia Hebraica Stuttgartensia (BHS).
+La traduction française est celle de la Traduction Œcuménique de la Bible (TOB), avec quelques arrangements personnels pour mettre en valeur la structure du texte hébreu et la répétition de certains mots.}\par
+\textit{La mise en page proposée veut mettre en valeur chaque unité d'une phrase.}
 \newpage
 \input{"Ez 33-37 TOB.tex"}
 
