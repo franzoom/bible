@@ -1,6 +1,6 @@
 # Fdb version 4
-["lualatex"] 1738421253 "/Users/franclab/Développement/bible/Ezechiel/Ez 33-37 Heb.tex" "Ez 33-37 Heb.pdf" "Ez 33-37 Heb" 1738421255 0
-  "/Users/franclab/Développement/bible/Ezechiel/Ez 33-37 Heb.tex" 1738421253 49234 aa3bf433d080d09881a9088f20c1ddbe ""
+["lualatex"] 1739642508 "/Users/franclab/Développement/bible/Ezechiel/Ez 33-37 Heb.tex" "Ez 33-37 Heb.pdf" "Ez 33-37 Heb" 1739642510 0
+  "/Users/franclab/Développement/bible/Ezechiel/Ez 33-37 Heb.tex" 1739642508 49470 4d981650d62d85c5d40baa124ce1fc06 ""
   "/Users/franclab/Library/Fonts/LinLibertine_Rah.ttf" 1341182597 806856 d772b5b67a27a0c8b2602bdd3fe1dd9f ""
   "/Users/franclab/Library/Fonts/SBL_Hbrw.ttf" 1726042914 315092 dbf49ba8a07d2e0e73b9b76aabd694f0 ""
   "/Users/franclab/Library/texlive/2023/texmf-var/luatex-cache/generic/fonts/hb/:Users:franclab:Library:Fonts:SBL_Hbrw.ttf:1:nil" 1737126711 29011 8208f60f4fba5f178e59e38606fab3f1 ""
@@ -27,8 +27,8 @@
   "/Users/franclab/Library/texlive/2023/texmf-var/luatex-cache/generic/fonts/otl/linlibertine-rzi.luc" 1684422114 276052 1bade0f610aa23d6e5fac1d1d60d3c3a ""
   "/Users/franclab/Library/texlive/2023/texmf-var/luatex-cache/generic/fonts/otl/lmroman12-bold.luc" 1684422112 128299 b151497b293cf2f51c7db1d2ff6e9c88 ""
   "/Users/franclab/Library/texlive/2023/texmf-var/luatex-cache/generic/fonts/otl/lmroman12-regular.luc" 1684422112 127670 710f0772a5cfcd2e057ee46ebf6eb610 ""
-  "/Users/franclab/Library/texlive/2023/texmf-var/luatex-cache/generic/names/luaotfload-lookup-cache.luc" 1738418216 4297 80807d99c64b9516aaa9e683689c33f3 ""
-  "/Users/franclab/Library/texlive/2023/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz" 1734514413 368389 d9d11d89af7c89b8a9425422915adef5 ""
+  "/Users/franclab/Library/texlive/2023/texmf-var/luatex-cache/generic/names/luaotfload-lookup-cache.luc" 1739547001 7494 4ff50c69ad3a7575f09f778dca014fac ""
+  "/Users/franclab/Library/texlive/2023/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz" 1738950272 372885 4e19030798807859a7c1c02e79c4c785 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmex10.tfm" 1136768653 992 662f679a0b3d2d53c1b94050fdaa3f50 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmmi10.tfm" 1136768653 1528 abec98dbc43e172678c11b3b9031252a ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmmi6.tfm" 1136768653 1512 f21f83efb36853c0b70002322c1ab3ad ""
@@ -158,8 +158,8 @@
   "/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1680636101 4622752 02d70c555fb1ccbaa0b6f1f330ce9b3b ""
   "/usr/local/texlive/2023/texmf-var/tex/generic/config/language.dat.lua" 1678822458 17725 7121acacfe82e4c3c09d4207cb343224 ""
   "/usr/local/texlive/2023/texmf-var/web2c/luahbtex/lualatex.fmt" 1680636107 11876865 e1d5f616b5f174365292477c3b1dc933 ""
-  "Ez 33-37 Heb.aux" 1738421254 607 86d74a278e7eccffbeb2f6df4b5118ed "lualatex"
-  "Ez 33-37 Heb.tex" 1738421253 49234 aa3bf433d080d09881a9088f20c1ddbe ""
+  "Ez 33-37 Heb.aux" 1739642510 607 c903caba4e55daf8c6cc38e208f689ac "lualatex"
+  "Ez 33-37 Heb.tex" 1739642508 49470 4d981650d62d85c5d40baa124ce1fc06 ""
   (generated)
   "Ez 33-37 Heb.aux"
   "Ez 33-37 Heb.log"
