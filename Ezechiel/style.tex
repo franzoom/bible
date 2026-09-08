@@ -4,6 +4,17 @@
 \def \verseSpace{\vskip 0.45em}
 \def \parSpace{\vskip 1.2em}
 \def \decalage{\hspace*{0.5cm}~}
+
+% ===== À AJOUTER DANS LE PRÉAMBULE DU DOCUMENT PRINCIPAL =====
+% (remplace \def \decalage{\hspace*{0.5cm}~})
+\newlength{\indentunit}
+\setlength{\indentunit}{0.5cm}
+\newlength{\curindent}
+\setlength{\curindent}{0pt}
+\newcommand{\indentlvl}[1]{\setlength{\curindent}{#1\indentunit}\hspace*{\curindent}}
+\newcommand{\brk}{\\
+\hspace*{\curindent}} % remplace \\ dans les paragraphes indentés
+% ==============================================================
 \def \pscolor{red} %couleur de la numérotation des versets
 \usepackage{titlesec} %gestion des formats de titre
 \usepackage{geometry}
