@@ -4,3 +4,5 @@
 **/*.aux
 **/*.latexmk
 **/*.fls
+**/*.synctex.gz
+**/indent.log

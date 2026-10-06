@@ -1,0 +1,14 @@
+# Réglages de latexindent pour ce dépôt (utilisé par VSCode au formatage).
+# Documentation : https://latexindentpl.readthedocs.io
+
+# Indentation de 2 espaces (au lieu d'une tabulation)
+defaultIndent: "  "
+
+# Supprime les espaces en fin de ligne
+removeTrailingWhitespace:
+  beforeProcessing: 0
+  afterProcessing: 1
+
+# N'indente pas le contenu de \begin{document} ... \end{document}
+noAdditionalIndent:
+  document: 1

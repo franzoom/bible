@@ -1,0 +1,59 @@
+{
+  // ===== Compilation : LuaLaTeX via latexmk =====
+  "latex-workshop.latex.tools": [
+    {
+      "name": "latexmk-lualatex",
+      "command": "latexmk",
+      "args": [
+        "-lualatex",
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "%DOC%"
+      ]
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "LuaLaTeX (latexmk)",
+      "tools": ["latexmk-lualatex"]
+    }
+  ],
+  "latex-workshop.latex.recipe.default": "first",
+  // Recompile à chaque sauvegarde
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  // Ne pas effacer les fichiers auxiliaires (accélère les recompilations)
+  "latex-workshop.latex.autoClean.run": "never",
+
+  // ===== Aperçu PDF dans le panneau de droite =====
+  "latex-workshop.view.pdf.viewer": "tab",
+  "latex-workshop.view.pdf.tab.editorGroup": "right",
+  // Le PDF suit la position du curseur après chaque compilation
+  "latex-workshop.synctex.afterBuild.enabled": true,
+
+  // ===== Formatage : latexindent (réglages dans .latexindent.yaml) =====
+  "latex-workshop.formatting.latex": "latexindent",
+  "latex-workshop.formatting.latexindent.args": [
+    "-c",
+    "%DIR%/",
+    "%TMPFILE%",
+    "-l=%WORKSPACE_FOLDER%/.latexindent.yaml"
+  ],
+
+  "[latex]": {
+    "editor.defaultFormatter": "James-Yu.latex-workshop",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.wordWrap": "on"
+  },
+  "files.encoding": "utf8",
+  "files.exclude": {
+    "**/*.aux": true,
+    "**/*.fdb_latexmk": true,
+    "**/*.fls": true,
+    "**/*.log": true,
+    "**/*.synctex.gz": true,
+    "**/indent.log": true
+  }
+}
