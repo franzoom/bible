@@ -1,5 +1,5 @@
 # Fdb version 4
-["lualatex"] 1791305731.11795 "/Users/franzoom/development/bible/ezechiel/Ez 33-37 Heb.tex" "Ez 33-37 Heb.pdf" "Ez 33-37 Heb" 1791305732.46834 0
+["lualatex"] 1792607449.64317 "/Users/franzoom/development/bible/ezechiel/Ez 33-37 Heb.tex" "Ez 33-37 Heb.pdf" "Ez 33-37 Heb" 1792607450.80312 0
   "/Users/franzoom/Library/Fonts/LinLibertine_Rah.ttf" 1341182597 806856 d772b5b67a27a0c8b2602bdd3fe1dd9f ""
   "/Users/franzoom/Library/Fonts/SBL_Hbrw.ttf" 1726042914 315092 dbf49ba8a07d2e0e73b9b76aabd694f0 ""
   "/Users/franzoom/Library/texlive/2026/texmf-var/luatex-cache/generic/fonts/hb/48db90e55b7bb14e64f74a7006c2a5f28b99886e216d066a99604d8236703a74.luc" 1788877271.66284 29011 8208f60f4fba5f178e59e38606fab3f1 ""
@@ -28,7 +28,7 @@
   "/Users/franzoom/Library/texlive/2026/texmf-var/luatex-cache/generic/fonts/otl/lmroman12-regular.luc" 1774449106.67014 127670 e9488709ecbb9088bc7e0315c96def49 ""
   "/Users/franzoom/Library/texlive/2026/texmf-var/luatex-cache/generic/names/luaotfload-lookup-cache.luc" 1791302903.27109 13801 c708258abb98610982514c702c14232a ""
   "/Users/franzoom/Library/texlive/2026/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz" 1774449106.63209 441070 27ef00366e2ae1753588297af244f664 ""
-  "/Users/franzoom/development/bible/ezechiel/Ez 33-37 Heb.tex" 1791305731.00979 47976 b53218c13a7501c0c792ff338937c855 ""
+  "/Users/franzoom/development/bible/ezechiel/Ez 33-37 Heb.tex" 1792607449.5417 47979 d7ae5f03addb0a11c9511c5e2854766d ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmex10.tfm" 1136768653 992 662f679a0b3d2d53c1b94050fdaa3f50 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmmi10.tfm" 1136768653 1528 abec98dbc43e172678c11b3b9031252a ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmmi6.tfm" 1136768653 1512 f21f83efb36853c0b70002322c1ab3ad ""
@@ -156,8 +156,8 @@
   "/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1774448314 5573038 b99aad5e4898a9034e953632f940512b ""
   "/usr/local/texlive/2026/texmf-var/tex/generic/config/language.dat.lua" 1774209518 18335 c4274f8330817a9faeabaefbb3147a29 ""
   "/usr/local/texlive/2026/texmf-var/web2c/luahbtex/lualatex.fmt" 1774448237 5655538 e3cd42f181c54bcd71dc424facf6bdba ""
-  "Ez 33-37 Heb.aux" 1791305732.34803 187 7fb2a9da96f7156aec3e40a9daa9586a "lualatex"
-  "Ez 33-37 Heb.tex" 1791305731.00979 47976 b53218c13a7501c0c792ff338937c855 ""
+  "Ez 33-37 Heb.aux" 1792607450.69458 187 7fb2a9da96f7156aec3e40a9daa9586a "lualatex"
+  "Ez 33-37 Heb.tex" 1792607449.5417 47979 d7ae5f03addb0a11c9511c5e2854766d ""
   (generated)
   "Ez 33-37 Heb.aux"
   "Ez 33-37 Heb.log"

@@ -1,5 +1,5 @@
 # Fdb version 4
-["lualatex"] 1791305421.16777 "/Users/franzoom/development/bible/ezechiel/Cours sur Ezechiel.tex" "Cours sur Ezechiel.pdf" "Cours sur Ezechiel" 1791305423.52465 0
+["lualatex"] 1792607418.14428 "/Users/franzoom/development/bible/ezechiel/Cours sur Ezechiel.tex" "Cours sur Ezechiel.pdf" "Cours sur Ezechiel" 1792607420.36864 0
   "../assets/deportation.jpg" 1758113933.00102 1759236 596906ede7201d25b05c613cac659d01 ""
   "../assets/seminaire_lyon.png" 1758113933.0034 1281799 552adb69bb4829f56abeb38587e9d562 ""
   "/Users/franzoom/Library/Fonts/SBL_Hbrw.ttf" 1726042914 315092 dbf49ba8a07d2e0e73b9b76aabd694f0 ""
@@ -27,7 +27,7 @@
   "/Users/franzoom/Library/texlive/2026/texmf-var/luatex-cache/generic/fonts/otl/lmroman12-regular.luc" 1774449106.67014 127670 e9488709ecbb9088bc7e0315c96def49 ""
   "/Users/franzoom/Library/texlive/2026/texmf-var/luatex-cache/generic/names/luaotfload-lookup-cache.luc" 1791302903.27109 13801 c708258abb98610982514c702c14232a ""
   "/Users/franzoom/Library/texlive/2026/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz" 1774449106.63209 441070 27ef00366e2ae1753588297af244f664 ""
-  "/Users/franzoom/development/bible/ezechiel/Cours sur Ezechiel.tex" 1791305421.06536 1783 b225390e105ebd4d2aa1631750c7e3d4 ""
+  "/Users/franzoom/development/bible/ezechiel/Cours sur Ezechiel.tex" 1791305439.58335 1783 b225390e105ebd4d2aa1631750c7e3d4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/opentype/public/libertine/LinLibertine_R.otf" 1490564759 528064 988f66c65b10dd49d02579bed6e3aa74 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/opentype/public/libertine/LinLibertine_RB.otf" 1490564759 426060 b9a407c04c8ebe9bd08169248f6a1b9e ""
   "/usr/local/texlive/2026/texmf-dist/fonts/opentype/public/libertine/LinLibertine_RBI.otf" 1490564759 261704 551f76da0dbfd88116c33cf639b4ebd0 ""
@@ -280,9 +280,9 @@
   "/usr/local/texlive/2026/texmf-var/tex/generic/config/language.dat" 1774209518 6843 b47da19a8f71adfd0d5f143e53e45276 ""
   "/usr/local/texlive/2026/texmf-var/tex/generic/config/language.dat.lua" 1774209518 18335 c4274f8330817a9faeabaefbb3147a29 ""
   "/usr/local/texlive/2026/texmf-var/web2c/luahbtex/lualatex.fmt" 1774448237 5655538 e3cd42f181c54bcd71dc424facf6bdba ""
-  "Cours sur Ezechiel.aux" 1791305423.33243 280 1ec5dc1c2e7d1a7cdec3252d39ba5c4f "lualatex"
-  "Cours sur Ezechiel.tex" 1791305421.06536 1783 b225390e105ebd4d2aa1631750c7e3d4 ""
-  "Ez 33-37 TOB.tex" 1791302802.81917 39010 216dc012da83fab0adfcc9b4db7490ed ""
+  "Cours sur Ezechiel.aux" 1792607420.18526 280 1ec5dc1c2e7d1a7cdec3252d39ba5c4f "lualatex"
+  "Cours sur Ezechiel.tex" 1791305439.58335 1783 b225390e105ebd4d2aa1631750c7e3d4 ""
+  "Ez 33-37 TOB.tex" 1792607415.94574 39025 8f8ba30e507bcdd377a047ae05d02925 ""
   "Ez bibliographie.tex" 1791302389.63579 1487 b86ca66eb608d34e875e5f4fb54afd44 ""
   "Ez chronologie.tex" 1791302389.60077 773 1018b0a3f5fc39386ef75b089c2358f4 ""
   "Ez plan.tex" 1791302389.61002 1681 21cf4faaf9d8f1bebf40b2b82b285e77 ""
