@@ -6,3 +6,4 @@
 **/*.fls
 **/*.synctex.gz
 **/indent.log
+.venv/

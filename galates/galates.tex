@@ -1,0 +1,696 @@
+% Galates : grec (pages de gauche) et TOB (pages de droite) en vis-à-vis,
+% synchronisés verset par verset grâce au paquet paracol.
+\documentclass[14pt,a4paper,twoside]{extarticle}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{titlesec} %gestion des formats de titre
+\usepackage{paracol}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{french}
+\usepackage{libertine} %police utilisée
+\setlength{\emergencystretch}{3em} % évite que les longues lignes débordent dans la marge
+
+\geometry{
+  left=10mm,
+  right=10mm,
+  top=15mm,
+  bottom=15mm
+}
+
+%%%%% titres (n'apparaissent que du côté français) %%%%%
+% \section*{...}, \subsection*{...}, \subsubsection*{...}
+\newif\ifrappelchapitre % vrai après une section ou une sous-section : le verset suivant rappelle le chapitre
+\titleformat{\section}
+{\Large\bfseries\scshape\filcenter\global\rappelchapitretrue}{\thesection}{5em}{}
+\titleformat{\subsection}
+{\large\bfseries\global\rappelchapitretrue}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+{\normalsize\bfseries\itshape}{\thesubsubsection}{1em}{}
+% \commentaire{...} : texte de présentation sous un titre (centré, en gras italique)
+% le \vspace négatif rapproche le commentaire du titre qui le précède
+\newcommand{\commentaire}[1]{\par\vspace{-0.8em}%
+  {\centering\large\bfseries\itshape #1\par}\vspace{0.6em}}
+
+\setlength{\parindent}{0pt}
+
+%%%%% versets : \verset{grec}{français} %%%%%
+% À l'intérieur de \verset, chaque ligne du fichier est une ligne du PDF.
+% Les > en début de ligne donnent le niveau d'indentation :
+%   \verset
+%     {Παῦλος ἀπόστολος
+%      > οὐκ ἀπ’ ἀνθρώπων
+%      >> διὰ Ἰησοῦ Χριστοῦ}
+%     {Paul, apôtre,
+%      > non de la part des hommes,
+%      >> par Jésus Christ}
+% Les deux textes commencent à la même hauteur (synchronisation paracol).
+\def \pscolor{red} %couleur de la numérotation des versets
+\def \pslabelsep{0.3em} %distance entre le numéro de verset et le texte
+\def \psleftmargin{1.5em} %marge à gauche du texte des versets
+\newlength{\indentunit}
+\setlength{\indentunit}{0.5cm} %largeur d'un niveau d'indentation (un >)
+\newlength{\versethang}
+\setlength{\versethang}{1em} %retrait en plus quand une ligne trop longue se replie
+\newcounter{chapitre}
+\newcounter{verset}
+% \chapitre{n} : n'affiche rien, remet les versets à 1 et sert au numéro rouge du verset 1
+\newcommand{\chapitre}[1]{\setcounter{chapitre}{#1}\setcounter{verset}{0}}
+% numéro du verset, précédé du numéro de chapitre au verset 1
+% et au premier verset qui suit une section ou une sous-section
+\newcommand{\numverset}{{\fontspec{Linux Libertine}\color{\pscolor}%
+  \ifnum\value{verset}=1 \rappelchapitretrue\fi
+  \ifrappelchapitre\arabic{chapitre}\,\fi{\small\textsuperscript{\arabic{verset}}}}}
+
+% --- mécanique interne (pas besoin d'y toucher) ---
+\makeatletter
+\newcount\verset@niv
+\newif\ifverset@premiere
+% compte les > au début d'une ligne, puis applique le niveau
+\def\verset@niveau{\verset@niv=0 \verset@compte}
+\def\verset@compte{\futurelet\verset@suivant\verset@compteB}
+\def\verset@compteB{\ifx\verset@suivant>\expandafter\verset@plus
+  \else\expandafter\verset@applique\fi}
+\def\verset@plus>{\advance\verset@niv\@ne \verset@compte}
+\def\verset@applique{%
+  \setlength{\leftskip}{\dimexpr\psleftmargin+\indentunit*\verset@niv\relax}%
+  \hangindent\versethang \hangafter\@ne
+  \ifverset@premiere \verset@premierefalse
+    \noindent\llap{\numverset\hspace{\pslabelsep}%
+      \hspace{\dimexpr\indentunit*\verset@niv\relax}}%
+  \fi
+  \ignorespaces}
+% saute les fins de ligne et les espaces avant un argument
+\def\verset@saute#1{\def\verset@apres{#1}\verset@sauteB}
+\def\verset@sauteB{\futurelet\verset@suivant\verset@sauteC}
+\def\verset@sauteC{%
+  \ifx\verset@suivant\verset@nl \expandafter\verset@mange
+  \else\ifx\verset@suivant\@sptoken \expandafter\expandafter\expandafter\verset@mangeespace
+  \else \expandafter\expandafter\expandafter\verset@apres\fi\fi}
+\def\verset@mange#1{\verset@sauteB}
+\def\verset@mangeespace{\afterassignment\verset@sauteB\let\verset@tmp= }
+% fin de ligne dans un verset : nouvelle ligne, puis lecture du niveau
+\def\verset@nl{\par\verset@niveau}
+\begingroup
+\catcode`\^^M=\active%
+\gdef\verset@lignes{\catcode`\^^M=\active\let^^M\verset@nl}%
+\gdef\versetpar#1{{\setlength{\parskip}{0pt}\let^^M\verset@nl%
+  \verset@premieretrue\verset@niveau#1\par}}%
+\endgroup
+\newcommand{\verset}{\begingroup\verset@lignes\verset@saute\verset@lireA}
+\def\verset@lireA#1{\verset@saute{\verset@lireB{#1}}}
+\def\verset@lireB#1#2{\endgroup\stepcounter{verset}%
+  \switchcolumn[0]*\versetpar{#1}%
+  \switchcolumn[1]\versetpar{#2}%
+  \global\rappelchapitrefalse}
+\makeatother
+
+% compteurs communs aux deux colonnes (paracol les sépare par défaut)
+\globalcounter{chapitre}
+\globalcounter{verset}
+
+\begin{document}
+
+\pagestyle{fancy}
+\fancyhf{} % Efface les en-têtes et pieds de page par défaut
+\renewcommand{\headrulewidth}{0pt} % Supprime la ligne horizontale en haut de chaque page
+
+% page 1 blanche : le grec doit commencer sur une page paire (à gauche)
+\thispagestyle{empty}\null\newpage
+
+% [1]*{2} : la colonne 0 (grec) va sur la page de gauche,
+% la colonne 1 (TOB) sur la page de droite en vis-à-vis
+\begin{paracol}[1]*{2}
+  \switchcolumn[1] % tout ce qui est hors \verset (titres...) va dans la colonne française
+
+  \chapitre{1}
+
+  \section*{OUVERTURE}
+  \commentaire{De l'établissement de Paul comme apôtre\\ à la révélation de l'Évangile (1,1-12)}
+  \subsubsection*{Adresse, source et contenu de l'Évangile de Paul}
+  \verset
+  {Παῦλος ἀπόστολος
+    > οὐκ ἀπ’ ἀνθρώπων
+    > οὐδὲ δι’ ἀνθρώπου
+    > ἀλλὰ
+    >> διὰ Ἰησοῦ Χριστοῦ
+    >> καὶ θεοῦ πατρὸς τοῦ
+    >>> ἐγείραντος τὸν ἐκ νεκρῶν,}
+  {Paul, apôtre,
+    > non de la part des hommes,
+    > ni par un homme,
+    > mais
+    >> par Jésus Christ
+    >> et Dieu le Père
+    >>> qui l’a ressuscité d’entre les morts,}
+  \verset
+  {καὶ οἱ σὺν ἐμοὶ πάντες ἀδελφοὶ
+    ταῖς ἐκκλησίαις τῆς Γαλατίας,}
+  {et tous les frères qui sont avec moi,
+    aux Églises de Galatie:}
+  \verset
+  {χάρις ὑμῖν καὶ εἰρήνη
+    > ἀπὸ θεοῦ πατρὸς ἡμῶν
+    > καὶ κυρίου Ἰησοῦ Χριστοῦ}
+  {à vous grâce et paix
+    > de la part de Dieu notre Père
+    > et du Seigneur Jésus Christ,}
+  \verset
+  {>> τοῦ δόντος ἑαυτὸν ὑπὲρ τῶν ἁμαρτιῶν ἡμῶν,
+    >>> ὅπως ἐξέληται ἡμᾶς ἐκ τοῦ αἰῶνος τοῦ ἐνεστῶτος πονηροῦ
+    >>> κατὰ τὸ θέλημα τοῦ θεοῦ καὶ πατρὸς ἡμῶν,}
+  {>> qui s’est livré pour nos péchés,
+    >>> afin de nous arracher à ce siècle du mal,
+    >>> conformément à la volonté de Dieu, qui est notre Père.}
+  \verset
+  {>>>> ᾧ ἡ δόξα εἰς τοὺς αἰῶνας τῶν αἰώνων, ἀμήν.}
+  {>>>> à qui est la gloire pour les siècles des siècles. Amen.}
+
+  \subsubsection*{Exorde: l'intangibilité de l'Évangile paulinien}
+  \verset
+  {Θαυμάζω ὅτι οὕτως ταχέως μετατίθεσθε
+    > ἀπὸ τοῦ καλέσαντος ὑμᾶς ἐν χάριτι [Χριστοῦ]
+    >> εἰς ἕτερον εὐαγγέλιον,}
+  {Je m'étonne qu'ainsi rapidement vous vous détourniez
+    > de celui qui vous a appelés par la grâce (du Christ),
+    >> pour passer à un évangile différent.}
+  \verset
+  {>>> ὃ οὐκ ἔστιν ἄλλο,
+    >>>> εἰ μή τινές εἰσιν οἱ ταράσσοντες ὑμᾶς
+    >>>> καὶ θέλοντες μεταστρέψαι
+    >>>>> τὸ εὐαγγέλιον τοῦ Χριστοῦ.}
+  {>>> Non pas qu’il y en ait un autre;
+    >>>> il y a seulement des gens qui jettent le trouble parmi vous
+    >>>> et qui veulent renverser
+    >>>>> l’Évangile du Christ.}
+  \verset
+  {ἀλλὰ καὶ ἐὰν ἡμεῖς ἢ ἄγγελος ἐξ οὐρανοῦ
+    εὐαγγελίζηται [ὑμῖν]
+    > παρ’ ὃ εὐηγγελισάμεθα ὑμῖν,
+    >> ἀνάθεμα ἔστω.}
+  {Mais si nous ou un ange du ciel,
+    (vous) annonçait un Évangile
+    > contraire à celui que nous vous avons annoncé,
+    >> qu’il soit anathème!}
+  \verset
+  {ὡς προειρήκαμεν καὶ ἄρτι πάλιν λέγω·
+    > εἴ τις ὑμᾶς εὐαγγελίζεται παρ’ ὃ παρελάβετε,
+    >> ἀνάθεμα ἔστω.}
+  {Nous l’avons déjà dit, et je le dis de nouveau maintenant:
+    > si quelqu’un vous annonce un évangile différent de celui que vous avez reçu,
+    >> qu’il soit anathème!}
+  \verset
+  {Ἄρτι γὰρ ἀνθρώπους πείθω ἢ τὸν θεόν;
+    ἢ ζητῶ ἀνθρώποις ἀρέσκειν;
+    εἰ ἔτι ἀνθρώποις ἤρεσκον,
+    > Χριστοῦ δοῦλος οὐκ ἂν ἤμην. \\}
+  {Car, maintenant, est-ce que je cherche la faveur des hommes ou celle de Dieu?
+    Ou est-ce que je cherche à plaire aux hommes?
+    Si j’en étais encore à plaire aux hommes,
+    > je ne serais plus serviteur du Christ. \\}
+  \verset
+  {Γνωρίζω γὰρ ὑμῖν, ἀδελφοί,
+    > τὸ εὐαγγέλιον τὸ εὐαγγελισθὲν ὑπ’ ἐμοῦ
+    > ὅτι οὐκ ἔστιν κατὰ ἄνθρωπον·}
+  {Car, je vous le déclare, frères:
+    > cet Évangile que je vous ai annoncé
+    > n’est pas de l’homme;}
+  \verset
+  {οὐδὲ γὰρ ἐγὼ παρὰ ἀνθρώπου
+    > παρέλαβον αὐτὸ οὔτε ἐδιδάχθην
+    >> ἀλλὰ δι’ ἀποκαλύψεως Ἰησοῦ Χριστοῦ.}
+  {et d’ailleurs, ce n’est pas par un homme
+    > qu’il m’a été transmis ni enseigné,
+    >> mais par une révélation de Jésus Christ.}
+
+    
+  \section*{PREMIÈRE PARTIE}
+  \commentaire{Leçon tirée de l'expérience:\\la vérité de l'Évangile de Paul (1,13-2,21)}
+  \subsection*{Confirmation de la proposition par les évènements (1,13-2,14)}
+  \subsubsection*{La transformation d'une vie, signe de la vérité de l'Évangile fondé sur un don}
+  \verset
+  {Ἠκούσατε γὰρ τὴν ἐμὴν ἀναστροφήν ποτε ἐν τῷ Ἰουδαϊσμῷ,
+    > ὅτι καθ’ ὑπερβολὴν ἐδίωκον τὴν ἐκκλησίαν τοῦ θεοῦ
+    > καὶ ἐπόρθουν αὐτήν,}
+  {Car vous avez entendu parler de mon comportement naguère dans le judaïsme:
+    > avec quelle frénésie je persécutais l’Église de Dieu
+    > et je cherchais à la détruire;}
+  \verset
+  {> καὶ προέκοπτον ἐν τῷ Ἰουδαϊσμῷ
+    >> ὑπὲρ πολλοὺς συνηλικιώτας ἐν τῷ γένει μου,
+    >> περισσοτέρως ζηλωτὴς ὑπάρχων τῶν πατρικῶν μου παραδόσεων.}
+  {> je faisais des progrès dans le judaïsme,
+    >> surpassant la plupart de ceux de mon âge et de ma race
+    >> par mon zèle débordant pour les traditions de mes pères.}
+  \verset
+  {Ὅτε δὲ εὐδόκησεν [ὁ θεὸς]
+    > ὁ ἀφορίσας με ἐκ κοιλίας μητρός μου
+    > καὶ καλέσας διὰ τῆς χάριτος αὐτοῦ}
+  {Mais, lorsque
+    > celui qui m’a mis à part depuis le sein de ma mère
+    > et m’a appelé par sa grâce
+    a jugé bon}
+  \verset
+  {>> ἀποκαλύψαι τὸν υἱὸν αὐτοῦ ἐν ἐμοί,
+    >> ἵνα εὐαγγελίζωμαι αὐτὸν ἐν τοῖς ἔθνεσιν,
+    εὐθέως οὐ προσανεθέμην σαρκὶ καὶ αἵματι}
+  {>> de révéler en moi son Fils
+    >> afin que je l’annonce parmi les païens,
+    aussitôt, loin de recourir à aucun conseil humain}
+  \verset
+  {> οὐδὲ ἀνῆλθον εἰς Ἱεροσόλυμα πρὸς τοὺς πρὸ ἐμοῦ ἀποστόλους,
+    ἀλλ’ ἀπῆλθον εἰς Ἀραβίαν
+    > καὶ πάλιν ὑπέστρεψα εἰς Δαμασκόν.}
+  {> ou de monter à Jérusalem auprès de ceux qui étaient apôtres avant moi,
+    je suis parti pour l’Arabie,
+    > puis je suis revenu à Damas.}
+  \verset
+  {Ἔπειτα μετὰ ἔτη τρία ἀνῆλθον εἰς Ἱεροσόλυμα
+    > ἱστορῆσαι Κηφᾶν
+    > καὶ ἐπέμεινα πρὸς αὐτὸν ἡμέρας δεκαπέντε,}
+  {Ensuite, trois ans après, je suis monté à Jérusalem
+    > pour faire la connaissance de Céphas
+    > et je suis resté quinze jours auprès de lui,}
+  \verset
+  {ἕτερον δὲ τῶν ἀποστόλων οὐκ εἶδον
+    > εἰ μὴ Ἰάκωβον τὸν ἀδελφὸν τοῦ κυρίου.}
+  {sans voir cependant aucun autre apôtre,
+    > mais seulement Jacques, le frère du Seigneur.}
+  \verset
+  {ἃ δὲ γράφω ὑμῖν, ἰδοὺ ἐνώπιον τοῦ θεοῦ
+    > ὅτι οὐ ψεύδομαι.}
+  {Ce que je vous écris, je le dis devant Dieu,
+    > ce n’est pas un mensonge.}
+  \verset
+  {Ἔπειτα ἦλθον εἰς τὰ κλίματα τῆς Συρίας καὶ τῆς Κιλικίας·}
+  {Ensuite, je me suis rendu dans les régions de Syrie et de Cilicie.}
+  \verset
+  {ἤμην δὲ ἀγνοούμενος τῷ προσώπῳ
+    > ταῖς ἐκκλησίαις τῆς Ἰουδαίας ταῖς ἐν Χριστῷ.}
+  {Mais mon visage était inconnu
+    > aux Églises du Christ en Judée;}
+  \verset
+  {μόνον δὲ ἀκούοντες
+    > ἦσαν ὅτι ὁ διώκων ἡμᾶς ποτε
+    > νῦν εὐαγγελίζεται τὴν πίστιν ἥν ποτε ἐπόρθει,}
+  {simplement, elles avaient entendu dire:
+    > «celui qui nous persécutait naguère
+    > annonce maintenant la foi qu’il détruisait alors»,}
+  \verset
+  {καὶ ἐδόξαζον ἐν ἐμοὶ τὸν θεόν.}
+  {et elles glorifiaient Dieu à mon sujet.}
+
+  \subsubsection*{La reconnaissance de la vérité de l'Évangile de Paul}
+  \chapitre{2}
+  \verset
+  {Ἔπειτα διὰ δεκατεσσάρων ἐτῶν πάλιν ἀνέβην εἰς Ἱεροσόλυμα μετὰ Βαρναβᾶ συμπαραλαβὼν καὶ Τίτον·}
+  {Ensuite, au bout de quatorze ans, je suis monté de nouveau à Jérusalem avec Barnabas; j’emmenai aussi Tite avec moi.}
+  \verset
+  {ἀνέβην δὲ κατὰ ἀποκάλυψιν· καὶ ἀνεθέμην αὐτοῖς τὸ εὐαγγέλιον ὃ κηρύσσω ἐν τοῖς ἔθνεσιν, κατ’ ἰδίαν δὲ τοῖς δοκοῦσιν, μή πως εἰς κενὸν τρέχω ἢ ἔδραμον.}
+  {Or, j’y montai à la suite d’une révélation et je leur exposai l’Évangile que je prêche parmi les païens; je l’exposai aussi dans un entretien particulier aux personnes les plus considérées, de peur de courir ou d’avoir couru en vain.}
+  \verset
+  {ἀλλ’ οὐδὲ Τίτος ὁ σὺν ἐμοί, Ἕλλην ὤν, ἠναγκάσθη περιτμηθῆναι·}
+  {Mais on ne contraignit même pas Tite, mon compagnon, un Grec, à la circoncision;}
+  \verset
+  {διὰ δὲ τοὺς παρεισάκτους ψευδαδέλφους, οἵτινες παρεισῆλθον κατασκοπῆσαι τὴν ἐλευθερίαν ἡμῶν ἣν ἔχομεν ἐν Χριστῷ Ἰησοῦ, ἵνα ἡμᾶς καταδουλώσουσιν,}
+  {ç’aurait été à cause des faux frères, intrus qui, s’étant insinués, épiaient notre liberté, celle qui nous vient de Jésus Christ, afin de nous réduire en servitude.}
+  \verset
+  {οἷς οὐδὲ πρὸς ὥραν εἴξαμεν τῇ ὑποταγῇ, ἵνα ἡ ἀλήθεια τοῦ εὐαγγελίου διαμείνῃ πρὸς ὑμᾶς.}
+  {À ces gens-là nous ne nous sommes pas soumis, même pour une concession momentanée, afin que la vérité de l’Évangile fût maintenue pour vous.}
+  \verset
+  {Ἀπὸ δὲ τῶν δοκούντων εἶναί τι, – ὁποῖοί ποτε ἦσαν οὐδέν μοι διαφέρει· πρόσωπον [ὁ] θεὸς ἀνθρώπου οὐ λαμβάνει – ἐμοὶ γὰρ οἱ δοκοῦντες οὐδὲν προσανέθεντο,}
+  {Mais, en ce qui concerne les personnalités – ce qu’ils étaient alors, peu m’importe: Dieu ne regarde pas à la situation des hommes – ces personnages ne m’ont rien imposé de plus.}
+  \verset
+  {ἀλλὰ τοὐναντίον ἰδόντες ὅτι πεπίστευμαι τὸ εὐαγγέλιον τῆς ἀκροβυστίας καθὼς Πέτρος τῆς περιτομῆς,}
+  {Au contraire, ils virent que l’évangélisation des incirconcis m’avait été confiée, comme à Pierre celle des circoncis,}
+  \verset
+  {ὁ γὰρ ἐνεργήσας Πέτρῳ εἰς ἀποστολὴν τῆς περιτομῆς ἐνήργησεν καὶ ἐμοὶ εἰς τὰ ἔθνη,}
+  {– car celui qui avait agi en Pierre pour l’apostolat des circoncis avait aussi agi en moi en faveur des païens –}
+  \verset
+  {καὶ γνόντες τὴν χάριν τὴν δοθεῖσάν μοι, Ἰάκωβος καὶ Κηφᾶς καὶ Ἰωάννης, οἱ δοκοῦντες στῦλοι εἶναι, δεξιὰς ἔδωκαν ἐμοὶ καὶ Βαρναβᾷ κοινωνίας, ἵνα ἡμεῖς εἰς τὰ ἔθνη, αὐτοὶ δὲ εἰς τὴν περιτομήν·}
+  {et, reconnaissant la grâce qui m’a été donnée, Jacques, Céphas et Jean, considérés comme des colonnes, nous donnèrent la main, à moi et à Barnabas, en signe de communion, afin que nous allions, nous vers les païens, eux vers les circoncis.}
+  \verset
+  {μόνον τῶν πτωχῶν ἵνα μνημονεύωμεν, ὃ καὶ ἐσπούδασα αὐτὸ τοῦτο ποιῆσαι.}
+  {Simplement, nous aurions à nous souvenir des pauvres, ce que j’ai eu bien soin de faire.}
+
+
+  \subsubsection*{À Antioche, fidélité de Paul à l'Évangile reçu}
+  \verset
+  {Ὅτε δὲ ἦλθεν Κηφᾶς εἰς Ἀντιόχειαν, κατὰ πρόσωπον αὐτῷ ἀντέστην, ὅτι κατεγνωσμένος ἦν.}
+  {Mais, lorsque Céphas vint à Antioche, je me suis opposé à lui ouvertement, car il s’était mis dans son tort.}
+  \verset
+  {πρὸ τοῦ γὰρ ἐλθεῖν τινας ἀπὸ Ἰακώβου μετὰ τῶν ἐθνῶν συνήσθιεν· ὅτε δὲ ἦλθον, ὑπέστελλεν καὶ ἀφώριζεν ἑαυτὸν φοβούμενος τοὺς ἐκ περιτομῆς.}
+  {En effet, avant que soient venus des gens envoyés par Jacques, il prenait ses repas avec les païens; mais, après leur arrivée, il se mit à se dérober et se tint à l’écart, par crainte des circoncis;}
+  \verset
+  {καὶ συνυπεκρίθησαν αὐτῷ [καὶ] οἱ λοιποὶ Ἰουδαῖοι, ὥστε καὶ Βαρναβᾶς συναπήχθη αὐτῶν τῇ ὑποκρίσει.}
+  {et les autres Juifs entrèrent dans son jeu, de sorte que Barnabas lui-même fut entraîné dans ce double jeu.}
+  \verset
+  {ἀλλ’ ὅτε εἶδον ὅτι οὐκ ὀρθοποδοῦσιν πρὸς τὴν ἀλήθειαν τοῦ εὐαγγελίου, εἶπον τῷ Κηφᾷ ἔμπροσθεν πάντων· εἰ σὺ Ἰουδαῖος ὑπάρχων ἐθνικῶς καὶ οὐχὶ Ἰουδαϊκῶς ζῇς, πῶς τὰ ἔθνη ἀναγκάζεις ἰουδαΐζειν;}
+  {Mais, quand je vis qu’ils ne marchaient pas droit selon la vérité de l’Évangile, je dis à Céphas devant tout le monde: «Si toi qui es Juif, tu vis à la manière des païens et non à la juive, comment peux-tu contraindre les païens à se comporter en Juifs?»}
+  \subsection*{Une conviction: par la foi de Jésus Christ vient la justice qui fait entrer dans le peuple de Dieu}
+  \verset
+  {Ἡμεῖς φύσει Ἰουδαῖοι καὶ οὐκ ἐξ ἐθνῶν ἁμαρτωλοί·}
+  {Nous sommes, nous, des Juifs de naissance et non pas des païens, ces pécheurs.}
+  \verset
+  {εἰδότες [δὲ] ὅτι οὐ δικαιοῦται ἄνθρωπος ἐξ ἔργων νόμου ἐὰν μὴ διὰ πίστεως Ἰησοῦ Χριστοῦ, καὶ ἡμεῖς εἰς Χριστὸν Ἰησοῦν ἐπιστεύσαμεν, ἵνα δικαιωθῶμεν ἐκ πίστεως Χριστοῦ καὶ οὐκ ἐξ ἔργων νόμου, ὅτι ἐξ ἔργων νόμου οὐ δικαιωθήσεται πᾶσα σάρξ.}
+  {Nous savons cependant que l’homme n’est pas justifié par les œuvres de la loi, mais seulement par la foi de Jésus Christ; nous avons cru, nous aussi, en Jésus Christ, afin d’être justifiés par la foi du Christ et non par les œuvres de la loi, parce que, par les œuvres de la loi, personne ne sera justifié.}
+  \verset
+  {εἰ δὲ ζητοῦντες δικαιωθῆναι ἐν Χριστῷ εὑρέθημεν καὶ αὐτοὶ ἁμαρτωλοί, ἆρα Χριστὸς ἁμαρτίας διάκονος; μὴ γένοιτο.}
+  {Mais si, en cherchant à être justifiés en Christ, nous avons été trouvés pécheurs nous aussi, Christ serait-il ministre du péché? Certes non.}
+  \verset
+  {εἰ γὰρ ἃ κατέλυσα ταῦτα πάλιν οἰκοδομῶ, παραβάτην ἐμαυτὸν συνιστάνω.}
+  {En effet, si je rebâtis ce que j’ai détruit, c’est moi qui me constitue transgresseur.}
+  \verset
+  {ἐγὼ γὰρ διὰ νόμου νόμῳ ἀπέθανον, ἵνα θεῷ ζήσω. Χριστῷ συνεσταύρωμαι·}
+  {Car moi, c’est par la loi que je suis mort à la loi afin de vivre pour Dieu. Avec le Christ, je suis un crucifié;}
+  \verset
+  {ζῶ δὲ οὐκέτι ἐγώ, ζῇ δὲ ἐν ἐμοὶ Χριστός· ὃ δὲ νῦν ζῶ ἐν σαρκί, ἐν πίστει ζῶ τῇ τοῦ υἱοῦ τοῦ θεοῦ τοῦ ἀγαπήσαντός με καὶ παραδόντος ἑαυτὸν ὑπὲρ ἐμοῦ.}
+  {je vis, mais ce n’est plus moi, c’est Christ qui vit en moi. Car ma vie présente dans la chair, je la vis dans la foi au Fils de Dieu qui m’a aimé et s’est livré pour moi.}
+  \verset
+  {Οὐκ ἀθετῶ τὴν χάριν τοῦ θεοῦ· εἰ γὰρ διὰ νόμου δικαιοσύνη, ἄρα Χριστὸς δωρεὰν ἀπέθανεν.}
+  {Je ne rends pas inutile la grâce de Dieu; car si, par la loi, on atteint la justice, c’est donc pour rien que Christ est mort.}
+
+  \chapitre{3}
+  \verset
+  {Ὦ ἀνόητοι Γαλάται, τίς ὑμᾶς ἐβάσκανεν, οἷς κατ’ ὀφθαλμοὺς Ἰησοῦς Χριστὸς προεγράφη ἐσταυρωμένος;}
+  {Ô Galates stupides, qui vous a envoûtés alors que, sous vos yeux, a été exposé Jésus Christ crucifié?}
+  \verset
+  {τοῦτο μόνον θέλω μαθεῖν ἀφ’ ὑμῶν· ἐξ ἔργων νόμου τὸ πνεῦμα ἐλάβετε ἢ ἐξ ἀκοῆς πίστεως;}
+  {Éclairez-moi simplement sur ce point: Est-ce en raison de la pratique de la loi que vous avez reçu l’Esprit, ou parce que vous avez écouté le message de la foi?}
+  \verset
+  {οὕτως ἀνόητοί ἐστε, ἐναρξάμενοι πνεύματι νῦν σαρκὶ ἐπιτελεῖσθε;}
+  {Êtes-vous stupides à ce point? Vous qui d’abord avez commencé par l’Esprit, est-ce la chair maintenant qui vous mène à la perfection?}
+  \verset
+  {τοσαῦτα ἐπάθετε εἰκῇ; εἴ γε καὶ εἰκῇ.}
+  {Avoir fait tant d’expériences en vain! Et encore, si c’était en vain!}
+  \verset
+  {ὁ οὖν ἐπιχορηγῶν ὑμῖν τὸ πνεῦμα καὶ ἐνεργῶν δυνάμεις ἐν ὑμῖν, ἐξ ἔργων νόμου ἢ ἐξ ἀκοῆς πίστεως;}
+  {Celui qui vous dispense l’Esprit et opère parmi vous des miracles, le fait-il donc en raison de la pratique de la loi ou parce que vous avez écouté le message de la foi?}
+  \verset
+  {Καθὼς Ἀβραὰμ ἐπίστευσεν τῷ θεῷ, καὶ ἐλογίσθη αὐτῷ εἰς δικαιοσύνην·}
+  {Puisque Abraham eut foi en Dieu et que cela lui fut compté comme justice,}
+  \verset
+  {γινώσκετε ἄρα ὅτι οἱ ἐκ πίστεως, οὗτοι υἱοί εἰσιν Ἀβραάμ.}
+  {comprenez-le donc: ce sont les croyants qui sont fils d’Abraham.}
+  \verset
+  {προϊδοῦσα δὲ ἡ γραφὴ ὅτι ἐκ πίστεως δικαιοῖ τὰ ἔθνη ὁ θεός, προευηγγελίσατο τῷ Ἀβραὰμ ὅτι ἐνευλογηθήσονται ἐν σοὶ πάντα τὰ ἔθνη·}
+  {D’ailleurs l’Écriture, prévoyant que Dieu justifierait les païens par la foi, a annoncé d’avance à Abraham cette bonne nouvelle: Toutes les nations seront bénies en toi.}
+  \verset
+  {ὥστε οἱ ἐκ πίστεως εὐλογοῦνται σὺν τῷ πιστῷ Ἀβραάμ.}
+  {Ainsi donc, ceux qui sont croyants sont bénis avec Abraham, le croyant.}
+  \verset
+  {Ὅσοι γὰρ ἐξ ἔργων νόμου εἰσίν, ὑπὸ κατάραν εἰσίν· γέγραπται γὰρ ὅτι ἐπικατάρατος πᾶς ὃς οὐκ ἐμμένει πᾶσιν τοῖς γεγραμμένοις ἐν τῷ βιβλίῳ τοῦ νόμου τοῦ ποιῆσαι αὐτά.}
+  {Car les pratiquants de la loi sont tous sous le coup de la malédiction, puisqu’il est écrit: Maudit soit quiconque ne persévère pas dans l’accomplissement de tout ce qui est écrit dans le livre de la loi.}
+  \verset
+  {ὅτι δὲ ἐν νόμῳ οὐδεὶς δικαιοῦται παρὰ τῷ θεῷ δῆλον, ὅτι ὁ δίκαιος ἐκ πίστεως ζήσεται·}
+  {Il est d’ailleurs évident que, par la loi, nul n’est justifié devant Dieu, puisque celui qui est juste par la foi vivra.}
+  \verset
+  {ὁ δὲ νόμος οὐκ ἔστιν ἐκ πίστεως, ἀλλ’ ὁ ποιήσας αὐτὰ ζήσεται ἐν αὐτοῖς.}
+  {Or le régime de la loi ne procède pas de la foi; pour elle, celui qui accomplira les prescriptions de cette loi en vivra.}
+  \verset
+  {Χριστὸς ἡμᾶς ἐξηγόρασεν ἐκ τῆς κατάρας τοῦ νόμου γενόμενος ὑπὲρ ἡμῶν κατάρα, ὅτι γέγραπται· ἐπικατάρατος πᾶς ὁ κρεμάμενος ἐπὶ ξύλου,}
+  {Christ a payé pour nous libérer de la malédiction de la loi, en devenant lui-même malédiction pour nous, puisqu’il est écrit: Maudit quiconque est pendu au bois.}
+  \verset
+  {ἵνα εἰς τὰ ἔθνη ἡ εὐλογία τοῦ Ἀβραὰμ γένηται ἐν Χριστῷ Ἰησοῦ, ἵνα τὴν ἐπαγγελίαν τοῦ πνεύματος λάβωμεν διὰ τῆς πίστεως.}
+  {Cela pour que la bénédiction d’Abraham parvienne aux païens en Jésus Christ, et qu’ainsi nous recevions, par la foi, l’Esprit, objet de la promesse.}
+  \verset
+  {Ἀδελφοί, κατὰ ἄνθρωπον λέγω· ὅμως ἀνθρώπου κεκυρωμένην διαθήκην οὐδεὶς ἀθετεῖ ἢ ἐπιδιατάσσεται.}
+  {Frères, partons des usages humains: un simple testament humain, s’il est en règle, personne ne l’annule ni ne le complète.}
+  \verset
+  {τῷ δὲ Ἀβραὰμ ἐρρέθησαν αἱ ἐπαγγελίαι καὶ τῷ σπέρματι αὐτοῦ. οὐ λέγει· καὶ τοῖς σπέρμασιν, ὡς ἐπὶ πολλῶν ἀλλ’ ὡς ἐφ’ ἑνός· καὶ τῷ σπέρματί σου, ὅς ἐστιν Χριστός.}
+  {Eh bien, c’est à Abraham que les promesses ont été faites, et à sa descendance. Il n’est pas dit: «et aux descendances», comme s’il s’agissait de plusieurs, mais c’est d’une seule qu’il s’agit: et à ta descendance, c’est-à-dire Christ.}
+  \verset
+  {τοῦτο δὲ λέγω· διαθήκην προκεκυρωμένην ὑπὸ τοῦ θεοῦ ὁ μετὰ τετρακόσια καὶ τριάκοντα ἔτη γεγονὼς νόμος οὐκ ἀκυροῖ εἰς τὸ καταργῆσαι τὴν ἐπαγγελίαν.}
+  {Voici donc ma pensée: un testament en règle a d’abord été établi par Dieu. La loi, venue quatre cent trente ans plus tard, ne l’abroge pas, ce qui rendrait vaine la promesse.}
+  \verset
+  {εἰ γὰρ ἐκ νόμου ἡ κληρονομία, οὐκέτι ἐξ ἐπαγγελίας· τῷ δὲ Ἀβραὰμ δι’ ἐπαγγελίας κεχάρισται ὁ θεός.}
+  {Car, si c’est par la loi que s’obtient l’héritage, ce n’est plus par la promesse. Or, c’est au moyen d’une promesse que Dieu a accordé sa grâce à Abraham.}
+  \verset
+  {Τί οὖν ὁ νόμος; τῶν παραβάσεων χάριν προσετέθη, ἄχρις οὗ ἔλθῃ τὸ σπέρμα ᾧ ἐπήγγελται, διαταγεὶς δι’ ἀγγέλων ἐν χειρὶ μεσίτου.}
+  {Dès lors, que vient faire la loi? Elle vient s’ajouter pour que se manifestent les transgressions, en attendant la venue de la descendance à laquelle était destinée la promesse: elle a été promulguée par les anges par la main d’un médiateur.}
+  \verset
+  {ὁ δὲ μεσίτης ἑνὸς οὐκ ἔστιν, ὁ δὲ θεὸς εἷς ἐστιν.}
+  {Or, ce médiateur n’est pas médiateur d’un seul. Et Dieu est unique.}
+  \verset
+  {ὁ οὖν νόμος κατὰ τῶν ἐπαγγελιῶν [τοῦ θεοῦ]; μὴ γένοιτο. εἰ γὰρ ἐδόθη νόμος ὁ δυνάμενος ζῳοποιῆσαι, ὄντως ἐκ νόμου ἂν ἦν ἡ δικαιοσύνη·}
+  {La loi va-t-elle donc à l’encontre des promesses de Dieu? Certes non. Si en effet une loi avait été donnée, qui ait le pouvoir de faire vivre, alors c’est de la loi qu’effectivement viendrait la justice.}
+  \verset
+  {ἀλλὰ συνέκλεισεν ἡ γραφὴ τὰ πάντα ὑπὸ ἁμαρτίαν, ἵνα ἡ ἐπαγγελία ἐκ πίστεως Ἰησοῦ Χριστοῦ δοθῇ τοῖς πιστεύουσιν.}
+  {Mais l’Écriture a tout soumis au péché dans une commune captivité afin que, par la foi en Jésus Christ, la promesse fût accomplie pour les croyants.}
+  \verset
+  {Πρὸ τοῦ δὲ ἐλθεῖν τὴν πίστιν ὑπὸ νόμον ἐφρουρούμεθα συγκλειόμενοι εἰς τὴν μέλλουσαν πίστιν ἀποκαλυφθῆναι,}
+  {Avant la venue de la foi, nous étions gardés en captivité sous la loi, en vue de la foi qui devait être révélée.}
+  \verset
+  {ὥστε ὁ νόμος παιδαγωγὸς ἡμῶν γέγονεν εἰς Χριστόν, ἵνα ἐκ πίστεως δικαιωθῶμεν·}
+  {Ainsi donc, la loi a été notre surveillant, en attendant le Christ, afin que nous soyons justifiés par la foi.}
+  \verset
+  {ἐλθούσης δὲ τῆς πίστεως οὐκέτι ὑπὸ παιδαγωγόν ἐσμεν.}
+  {Mais, après la venue de la foi, nous ne sommes plus soumis à ce surveillant.}
+  \verset
+  {Πάντες γὰρ υἱοὶ θεοῦ ἐστε διὰ τῆς πίστεως ἐν Χριστῷ Ἰησοῦ·}
+  {Car tous, vous êtes, par la foi, fils de Dieu, en Jésus Christ.}
+  \verset
+  {ὅσοι γὰρ εἰς Χριστὸν ἐβαπτίσθητε, Χριστὸν ἐνεδύσασθε.}
+  {Oui, vous tous qui avez été baptisés en Christ, vous avez revêtu Christ.}
+  \verset
+  {οὐκ ἔνι Ἰουδαῖος οὐδὲ Ἕλλην, οὐκ ἔνι δοῦλος οὐδὲ ἐλεύθερος, οὐκ ἔνι ἄρσεν καὶ θῆλυ· πάντες γὰρ ὑμεῖς εἷς ἐστε ἐν Χριστῷ Ἰησοῦ.}
+  {Il n’y a plus ni Juif, ni Grec; il n’y a plus ni esclave, ni homme libre; il n’y a plus l’homme et la femme; car tous, vous n’êtes qu’un en Jésus Christ.}
+  \verset
+  {εἰ δὲ ὑμεῖς Χριστοῦ, ἄρα τοῦ Ἀβραὰμ σπέρμα ἐστέ, κατ’ ἐπαγγελίαν κληρονόμοι.}
+  {Et si vous appartenez au Christ, c’est donc que vous êtes la descendance d’Abraham; selon la promesse, vous êtes héritiers.}
+
+  \chapitre{4}
+  \verset
+  {Λέγω δέ, ἐφ’ ὅσον χρόνον ὁ κληρονόμος νήπιός ἐστιν, οὐδὲν διαφέρει δούλου κύριος πάντων ὤν,}
+  {Telle est donc ma pensée: aussi longtemps que l’héritier est un enfant, il ne diffère en rien d’un esclave, lui qui est maître de tout;}
+  \verset
+  {ἀλλ’ ὑπὸ ἐπιτρόπους ἐστὶν καὶ οἰκονόμους ἄχρι τῆς προθεσμίας τοῦ πατρός.}
+  {mais il est soumis à des tuteurs et à des régisseurs jusqu’à la date fixée par son père.}
+  \verset
+  {οὕτως καὶ ἡμεῖς, ὅτε ἦμεν νήπιοι, ὑπὸ τὰ στοιχεῖα τοῦ κόσμου ἤμεθα δεδουλωμένοι·}
+  {Et nous, de même, quand nous étions des enfants soumis aux éléments du monde, nous étions esclaves.}
+  \verset
+  {ὅτε δὲ ἦλθεν τὸ πλήρωμα τοῦ χρόνου, ἐξαπέστειλεν ὁ θεὸς τὸν υἱὸν αὐτοῦ, γενόμενον ἐκ γυναικός, γενόμενον ὑπὸ νόμον,}
+  {Mais, quand est venu l’accomplissement du temps, Dieu a envoyé son Fils, né d’une femme et assujetti à la loi,}
+  \verset
+  {ἵνα τοὺς ὑπὸ νόμον ἐξαγοράσῃ, ἵνα τὴν υἱοθεσίαν ἀπολάβωμεν.}
+  {pour payer la libération de ceux qui sont assujettis à la loi, pour qu’il nous soit donné d’être fils adoptifs.}
+  \verset
+  {Ὅτι δέ ἐστε υἱοί, ἐξαπέστειλεν ὁ θεὸς τὸ πνεῦμα τοῦ υἱοῦ αὐτοῦ εἰς τὰς καρδίας ἡμῶν κρᾶζον· αββα ὁ πατήρ.}
+  {Fils, vous l’êtes bien: Dieu a envoyé dans nos cœurs l’Esprit de son Fils, qui crie: Abba – Père!}
+  \verset
+  {ὥστε οὐκέτι εἶ δοῦλος ἀλλ’ υἱός· εἰ δὲ υἱός, καὶ κληρονόμος διὰ θεοῦ.}
+  {Tu n’es donc plus esclave, mais fils; et, comme fils, tu es aussi héritier: c’est l’œuvre de Dieu.}
+  \verset
+  {Ἀλλὰ τότε μὲν οὐκ εἰδότες θεὸν ἐδουλεύσατε τοῖς φύσει μὴ οὖσιν θεοῖς·}
+  {Jadis, quand vous ne connaissiez pas Dieu, vous étiez asservis à des dieux qui, de leur nature, ne le sont pas,}
+  \verset
+  {νῦν δὲ γνόντες θεόν, μᾶλλον δὲ γνωσθέντες ὑπὸ θεοῦ, πῶς ἐπιστρέφετε πάλιν ἐπὶ τὰ ἀσθενῆ καὶ πτωχὰ στοιχεῖα οἷς πάλιν ἄνωθεν δουλεύειν θέλετε;}
+  {mais maintenant que vous connaissez Dieu, ou plutôt que vous êtes connus de lui, comment pouvez-vous retourner encore à des éléments faibles et pauvres, dans la volonté de vous y asservir de nouveau?}
+  \verset
+  {ἡμέρας παρατηρεῖσθε καὶ μῆνας καὶ καιροὺς καὶ ἐνιαυτούς,}
+  {Vous observez religieusement les jours, les mois, les saisons, les années!}
+  \verset
+  {φοβοῦμαι ὑμᾶς μή πως εἰκῇ κεκοπίακα εἰς ὑμᾶς.}
+  {Vous me faites craindre d’avoir travaillé pour vous en pure perte!}
+  \verset
+  {Γίνεσθε ὡς ἐγώ, ὅτι κἀγὼ ὡς ὑμεῖς, ἀδελφοί, δέομαι ὑμῶν. οὐδέν με ἠδικήσατε·}
+  {Comportez-vous comme moi, puisque je suis devenu comme vous, frères, je vous en prie. Vous ne m’avez fait aucun tort.}
+  \verset
+  {οἴδατε δὲ ὅτι δι’ ἀσθένειαν τῆς σαρκὸς εὐηγγελισάμην ὑμῖν τὸ πρότερον,}
+  {Vous le savez bien, ce fut à l’occasion d’une maladie que je vous ai, pour la première fois, annoncé la bonne nouvelle;}
+  \verset
+  {καὶ τὸν πειρασμὸν ὑμῶν ἐν τῇ σαρκί μου οὐκ ἐξουθενήσατε οὐδὲ ἐξεπτύσατε, ἀλλ’ ὡς ἄγγελον θεοῦ ἐδέξασθέ με, ὡς Χριστὸν Ἰησοῦν.}
+  {et, si éprouvant pour vous que fût mon corps, vous n’avez montré ni dédain, ni dégoût. Au contraire, vous m’avez accueilli comme un ange de Dieu, comme le Christ Jésus.}
+  \verset
+  {ποῦ οὖν ὁ μακαρισμὸς ὑμῶν; μαρτυρῶ γὰρ ὑμῖν ὅτι εἰ δυνατὸν τοὺς ὀφθαλμοὺς ὑμῶν ἐξορύξαντες ἐδώκατέ μοι.}
+  {Où donc est votre joie d’alors? Car je vous rends ce témoignage: si vous l’aviez pu, vous vous seriez arraché les yeux pour me les donner.}
+  \verset
+  {ὥστε ἐχθρὸς ὑμῶν γέγονα ἀληθεύων ὑμῖν;}
+  {Et maintenant, suis-je devenu votre ennemi parce que je vous dis la vérité?}
+  \verset
+  {ζηλοῦσιν ὑμᾶς οὐ καλῶς, ἀλλ’ ἐκκλεῖσαι ὑμᾶς θέλουσιν, ἵνα αὐτοὺς ζηλοῦτε·}
+  {L’empressement qu’on vous témoigne n’est pas de bon aloi; ils veulent seulement vous détacher de moi pour devenir eux-mêmes l’objet de votre empressement.}
+  \verset
+  {καλὸν δὲ ζηλοῦσθαι ἐν καλῷ πάντοτε καὶ μὴ μόνον ἐν τῷ παρεῖναί με πρὸς ὑμᾶς.}
+  {Ce qui est bon, c’est de se voir témoigner un empressement bien intentionné, en tout temps, et pas seulement quand j’étais présent parmi vous,}
+  \verset
+  {τέκνα μου, οὓς πάλιν ὠδίνω μέχρις οὗ μορφωθῇ Χριστὸς ἐν ὑμῖν·}
+  {mes petits enfants que, dans la douleur, j’enfante à nouveau, jusqu’à ce que Christ soit formé en vous.}
+  \verset
+  {ἤθελον δὲ παρεῖναι πρὸς ὑμᾶς ἄρτι καὶ ἀλλάξαι τὴν φωνήν μου, ὅτι ἀποροῦμαι ἐν ὑμῖν.}
+  {Oh! je voudrais être auprès de vous en ce moment pour trouver le ton qui convient, car je ne sais comment m’y prendre avec vous.}
+  \verset
+  {Λέγετέ μοι, οἱ ὑπὸ νόμον θέλοντες εἶναι, τὸν νόμον οὐκ ἀκούετε;}
+  {Dites-moi, vous qui voulez être soumis à la loi, n’entendez-vous pas ce que dit cette loi?}
+  \verset
+  {γέγραπται γὰρ ὅτι Ἀβραὰμ δύο υἱοὺς ἔσχεν, ἕνα ἐκ τῆς παιδίσκης καὶ ἕνα ἐκ τῆς ἐλευθέρας.}
+  {Il est écrit, en effet, qu’Abraham eut deux fils, un de la servante, un de la femme libre;}
+  \verset
+  {ἀλλ’ ὁ μὲν ἐκ τῆς παιδίσκης κατὰ σάρκα γεγέννηται, ὁ δὲ ἐκ τῆς ἐλευθέρας δι’ ἐπαγγελίας.}
+  {mais le fils de la servante était né selon la chair, tandis que le fils de la femme libre l’était par l’effet de la promesse.}
+  \verset
+  {ἅτινά ἐστιν ἀλληγορούμενα· αὗται γάρ εἰσιν δύο διαθῆκαι, μία μὲν ἀπὸ ὄρους Σινᾶ εἰς δουλείαν γεννῶσα, ἥτις ἐστὶν Ἁγάρ.}
+  {Il y a là une allégorie: ces femmes sont, en effet, les deux alliances. L’une, celle qui vient du mont Sinaï, engendre pour la servitude: c’est Hagar}
+  \verset
+  {τὸ δὲ Ἁγὰρ Σινᾶ ὄρος ἐστὶν ἐν τῇ Ἀραβίᾳ· συστοιχεῖ δὲ τῇ νῦν Ἰερουσαλήμ, δουλεύει γὰρ μετὰ τῶν τέκνων αὐτῆς.}
+  {– car le mont Sinaï est en Arabie. Et Hagar correspond à la Jérusalem actuelle puisqu’elle est esclave avec ses enfants.}
+  \verset
+  {ἡ δὲ ἄνω Ἰερουσαλὴμ ἐλευθέρα ἐστίν, ἥτις ἐστὶν μήτηρ ἡμῶν·}
+  {Mais la Jérusalem d’en haut est libre, et c’est elle notre mère:}
+  \verset
+  {γέγραπται γάρ· εὐφράνθητι, στεῖρα ἡ οὐ τίκτουσα, ῥῆξον καὶ βόησον, ἡ οὐκ ὠδίνουσα· ὅτι πολλὰ τὰ τέκνα τῆς ἐρήμου μᾶλλον ἢ τῆς ἐχούσης τὸν ἄνδρα.}
+  {car il est écrit: Réjouis-toi, stérile, toi qui n’enfantais pas; éclate en cris de joie, toi qui n’as pas connu les douleurs; car plus nombreux sont les enfants de la délaissée que les enfants de celle qui a un époux.}
+  \verset
+  {Ὑμεῖς δέ, ἀδελφοί, κατὰ Ἰσαὰκ ἐπαγγελίας τέκνα ἐστέ.}
+  {Et vous, frères, comme Isaac vous êtes enfants de la promesse.}
+  \verset
+  {ἀλλ’ ὥσπερ τότε ὁ κατὰ σάρκα γεννηθεὶς ἐδίωκεν τὸν κατὰ πνεῦμα, οὕτως καὶ νῦν.}
+  {Mais, de même que celui qui était né selon la chair persécutait alors celui qui était né selon l’Esprit, ainsi en est-il encore maintenant.}
+  \verset
+  {ἀλλὰ τί λέγει ἡ γραφή; ἔκβαλε τὴν παιδίσκην καὶ τὸν υἱὸν αὐτῆς· οὐ γὰρ μὴ κληρονομήσει ὁ υἱὸς τῆς παιδίσκης μετὰ τοῦ υἱοῦ τῆς ἐλευθέρας.}
+  {Eh bien! que dit l’Écriture? Chasse la servante et son fils, car il ne faut pas que le fils de la servante hérite avec le fils de la femme libre.}
+  \verset
+  {διό, ἀδελφοί, οὐκ ἐσμὲν παιδίσκης τέκνα ἀλλὰ τῆς ἐλευθέρας.}
+  {Ainsi donc, frères, nous ne sommes pas les enfants d’une esclave, mais ceux de la femme libre.}
+
+  \chapitre{5}
+  \verset
+  {Τῇ ἐλευθερίᾳ ἡμᾶς Χριστὸς ἠλευθέρωσεν· στήκετε οὖν καὶ μὴ πάλιν ζυγῷ δουλείας ἐνέχεσθε.}
+  {C’est pour que nous soyons vraiment libres que Christ nous a libérés. Tenez donc ferme et ne vous laissez pas remettre sous le joug de l’esclavage.}
+  \verset
+  {Ἴδε ἐγὼ Παῦλος λέγω ὑμῖν ὅτι ἐὰν περιτέμνησθε, Χριστὸς ὑμᾶς οὐδὲν ὠφελήσει.}
+  {Moi, Paul, je vous le dis: si vous vous faites circoncire, Christ ne vous servira plus de rien.}
+  \verset
+  {μαρτύρομαι δὲ πάλιν παντὶ ἀνθρώπῳ περιτεμνομένῳ ὅτι ὀφειλέτης ἐστὶν ὅλον τὸν νόμον ποιῆσαι.}
+  {Et j’atteste encore une fois à tout homme qui se fait circoncire, qu’il est tenu de pratiquer la loi intégralement.}
+  \verset
+  {κατηργήθητε ἀπὸ Χριστοῦ, οἵτινες ἐν νόμῳ δικαιοῦσθε, τῆς χάριτος ἐξεπέσατε.}
+  {Vous avez rompu avec Christ, si vous placez votre justice dans la loi; vous êtes déchus de la grâce.}
+  \verset
+  {ἡμεῖς γὰρ πνεύματι ἐκ πίστεως ἐλπίδα δικαιοσύνης ἀπεκδεχόμεθα.}
+  {Quant à nous, c’est par l’Esprit, en vertu de la foi, que nous attendons fermement que se réalise ce que la justification nous fait espérer.}
+  \verset
+  {ἐν γὰρ Χριστῷ Ἰησοῦ οὔτε περιτομή τι ἰσχύει οὔτε ἀκροβυστία ἀλλὰ πίστις δι’ ἀγάπης ἐνεργουμένη.}
+  {Car, pour celui qui est en Jésus Christ, ni la circoncision, ni l’incirconcision ne sont efficaces, mais la foi agissant par l’amour.}
+  \verset
+  {Ἐτρέχετε καλῶς· τίς ὑμᾶς ἐνέκοψεν [τῇ] ἀληθείᾳ μὴ πείθεσθαι;}
+  {Vous couriez bien; qui, en vous barrant la route, empêche la vérité de vous entraîner?}
+  \verset
+  {ἡ πεισμονὴ οὐκ ἐκ τοῦ καλοῦντος ὑμᾶς.}
+  {Une telle influence ne vient pas de celui qui vous appelle.}
+  \verset
+  {μικρὰ ζύμη ὅλον τὸ φύραμα ζυμοῖ.}
+  {Un peu de levain, et toute la pâte lève!}
+  \verset
+  {ἐγὼ πέποιθα εἰς ὑμᾶς ἐν κυρίῳ ὅτι οὐδὲν ἄλλο φρονήσετε· ὁ δὲ ταράσσων ὑμᾶς βαστάσει τὸ κρίμα, ὅστις ἐὰν ᾖ.}
+  {Pour moi, j’ai confiance dans le Seigneur pour vous: vous ne prendrez pas une autre orientation. Mais celui qui jette le trouble parmi vous en subira la sanction, quel qu’il soit.}
+  \verset
+  {Ἐγὼ δέ, ἀδελφοί, εἰ περιτομὴν ἔτι κηρύσσω, τί ἔτι διώκομαι; ἄρα κατήργηται τὸ σκάνδαλον τοῦ σταυροῦ.}
+  {Quant à moi, frères, si je prêche encore la circoncision, pourquoi suis-je alors persécuté? Dans ce cas, le scandale de la croix est aboli!}
+  \verset
+  {Ὄφελον καὶ ἀποκόψονται οἱ ἀναστατοῦντες ὑμᾶς.}
+  {Qu’ils aillent donc jusqu’à se mutiler tout à fait, ceux qui sèment le désordre parmi vous!}
+  \verset
+  {Ὑμεῖς γὰρ ἐπ’ ἐλευθερίᾳ ἐκλήθητε, ἀδελφοί· μόνον μὴ τὴν ἐλευθερίαν εἰς ἀφορμὴν τῇ σαρκί, ἀλλὰ διὰ τῆς ἀγάπης δουλεύετε ἀλλήλοις.}
+  {Vous, frères, c’est à la liberté que vous avez été appelés. Seulement, que cette liberté ne donne aucune prise à la chair! Mais, par l’amour, mettez-vous au service les uns des autres.}
+  \verset
+  {ὁ γὰρ πᾶς νόμος ἐν ἑνὶ λόγῳ πεπλήρωται, ἐν τῷ· ἀγαπήσεις τὸν πλησίον σου ὡς σεαυτόν.}
+  {Car la loi tout entière trouve son accomplissement en cette unique parole: Tu aimeras ton prochain comme toi-même.}
+  \verset
+  {εἰ δὲ ἀλλήλους δάκνετε καὶ κατεσθίετε, βλέπετε μὴ ὑπ’ ἀλλήλων ἀναλωθῆτε.}
+  {Mais, si vous vous mordez et vous dévorez les uns les autres, prenez garde: vous allez vous détruire les uns les autres.}
+  \verset
+  {Λέγω δέ, πνεύματι περιπατεῖτε καὶ ἐπιθυμίαν σαρκὸς οὐ μὴ τελέσητε.}
+  {Écoutez-moi: marchez sous l’impulsion de l’Esprit et vous n’accomplirez plus ce que la chair désire.}
+  \verset
+  {ἡ γὰρ σὰρξ ἐπιθυμεῖ κατὰ τοῦ πνεύματος, τὸ δὲ πνεῦμα κατὰ τῆς σαρκός, ταῦτα γὰρ ἀλλήλοις ἀντίκειται, ἵνα μὴ ἃ ἐὰν θέλητε ταῦτα ποιῆτε.}
+  {Car la chair, en ses désirs, s’oppose à l’Esprit – et l’Esprit à la chair; entre eux, c’est l’antagonisme – pour que, ce que vous voulez faire, vous ne le fassiez pas.}
+  \verset
+  {εἰ δὲ πνεύματι ἄγεσθε, οὐκ ἐστὲ ὑπὸ νόμον.}
+  {Mais si vous êtes conduits par l’Esprit, vous n’êtes plus soumis à la loi.}
+  \verset
+  {φανερὰ δέ ἐστιν τὰ ἔργα τῆς σαρκός, ἅτινά ἐστιν πορνεία, ἀκαθαρσία, ἀσέλγεια,}
+  {On les connaît, les œuvres de la chair: libertinage, impureté, débauche,}
+  \verset
+  {εἰδωλολατρία, φαρμακεία, ἔχθραι, ἔρις, ζῆλος, θυμοί, ἐριθεῖαι, διχοστασίαι, αἱρέσεις,}
+  {idolâtrie, magie, haines, discorde, jalousie, emportements, rivalités, dissensions, factions,}
+  \verset
+  {φθόνοι, μέθαι, κῶμοι καὶ τὰ ὅμοια τούτοις, ἃ προλέγω ὑμῖν, καθὼς προεῖπον ὅτι οἱ τὰ τοιαῦτα πράσσοντες βασιλείαν θεοῦ οὐ κληρονομήσουσιν.}
+  {envie, beuveries, ripailles et autres choses semblables; leurs auteurs, je vous en préviens, comme je l’ai déjà dit, n’hériteront pas du Royaume de Dieu.}
+  \verset
+  {ὁ δὲ καρπὸς τοῦ πνεύματός ἐστιν ἀγάπη χαρὰ εἰρήνη, μακροθυμία χρηστότης ἀγαθωσύνη, πίστις}
+  {Mais voici le fruit de l’Esprit: amour, joie, paix, patience, bonté, bienveillance, foi,}
+  \verset
+  {πραΰτης ἐγκράτεια· κατὰ τῶν τοιούτων οὐκ ἔστιν νόμος.}
+  {douceur, maîtrise de soi; contre de telles choses, il n’y a pas de loi.}
+  \verset
+  {οἱ δὲ τοῦ Χριστοῦ [Ἰησοῦ] τὴν σάρκα ἐσταύρωσαν σὺν τοῖς παθήμασιν καὶ ταῖς ἐπιθυμίαις.}
+  {Ceux qui sont au Christ ont crucifié la chair avec ses passions et ses désirs.}
+  \verset
+  {Εἰ ζῶμεν πνεύματι, πνεύματι καὶ στοιχῶμεν.}
+  {Si nous vivons par l’Esprit, marchons aussi sous l’impulsion de l’Esprit.}
+  \verset
+  {μὴ γινώμεθα κενόδοξοι, ἀλλήλους προκαλούμενοι, ἀλλήλοις φθονοῦντες.}
+  {Ne soyons pas vaniteux: entre nous, pas de provocations, entre nous, pas d’envie.}
+
+  \chapitre{6}
+  \verset
+  {Ἀδελφοί, ἐὰν καὶ προλημφθῇ ἄνθρωπος ἔν τινι παραπτώματι, ὑμεῖς οἱ πνευματικοὶ καταρτίζετε τὸν τοιοῦτον ἐν πνεύματι πραΰτητος, σκοπῶν σεαυτὸν μὴ καὶ σὺ πειρασθῇς.}
+  {Frères, s’il arrive à quelqu’un d’être pris en faute, c’est à vous, les spirituels, de le redresser dans un esprit de douceur; prends garde à toi: ne peux-tu pas être tenté, toi aussi?}
+  \verset
+  {Ἀλλήλων τὰ βάρη βαστάζετε καὶ οὕτως ἀναπληρώσετε τὸν νόμον τοῦ Χριστοῦ.}
+  {Portez les fardeaux les uns des autres; accomplissez ainsi la loi du Christ.}
+  \verset
+  {εἰ γὰρ δοκεῖ τις εἶναί τι μηδὲν ὤν, φρεναπατᾷ ἑαυτόν.}
+  {Car, si quelqu’un se prend pour un personnage, lui qui n’est rien, il est sa propre dupe.}
+  \verset
+  {τὸ δὲ ἔργον ἑαυτοῦ δοκιμαζέτω ἕκαστος, καὶ τότε εἰς ἑαυτὸν μόνον τὸ καύχημα ἕξει καὶ οὐκ εἰς τὸν ἕτερον·}
+  {Mais que chacun examine son œuvre à lui; alors, s’il y trouve un motif de fierté, ce sera par rapport à lui-même et non par comparaison à un autre.}
+  \verset
+  {ἕκαστος γὰρ τὸ ἴδιον φορτίον βαστάσει.}
+  {Car c’est sa propre charge que chacun portera.}
+  \verset
+  {Κοινωνείτω δὲ ὁ κατηχούμενος τὸν λόγον τῷ κατηχοῦντι ἐν πᾶσιν ἀγαθοῖς.}
+  {Que celui qui reçoit l’enseignement de la Parole fasse une part dans tous ses biens en faveur de celui qui l’instruit.}
+  \verset
+  {Μὴ πλανᾶσθε, θεὸς οὐ μυκτηρίζεται. ὃ γὰρ ἐὰν σπείρῃ ἄνθρωπος, τοῦτο καὶ θερίσει·}
+  {Ne vous faites pas d’illusions: Dieu ne se laisse pas narguer; car ce que l’homme sème, il le récoltera.}
+  \verset
+  {ὅτι ὁ σπείρων εἰς τὴν σάρκα ἑαυτοῦ ἐκ τῆς σαρκὸς θερίσει φθοράν, ὁ δὲ σπείρων εἰς τὸ πνεῦμα ἐκ τοῦ πνεύματος θερίσει ζωὴν αἰώνιον.}
+  {Celui qui sème pour sa propre chair récoltera ce que produit la chair: la corruption. Celui qui sème pour l’Esprit récoltera ce que produit l’Esprit: la vie éternelle.}
+  \verset
+  {τὸ δὲ καλὸν ποιοῦντες μὴ ἐγκακῶμεν, καιρῷ γὰρ ἰδίῳ θερίσομεν μὴ ἐκλυόμενοι.}
+  {Faisons le bien sans défaillance; car, au temps voulu, nous récolterons si nous ne nous relâchons pas.}
+  \verset
+  {Ἄρα οὖν ὡς καιρὸν ἔχομεν, ἐργαζώμεθα τὸ ἀγαθὸν πρὸς πάντας, μάλιστα δὲ πρὸς τοὺς οἰκείους τῆς πίστεως.}
+  {Donc, tant que nous disposons de temps, travaillons pour le bien de tous, surtout celui de nos proches dans la foi.}
+  \verset
+  {Ἴδετε πηλίκοις ὑμῖν γράμμασιν ἔγραψα τῇ ἐμῇ χειρί.}
+  {Voyez ces grosses lettres: je vous écris de ma propre main!}
+  \verset
+  {Ὅσοι θέλουσιν εὐπροσωπῆσαι ἐν σαρκί, οὗτοι ἀναγκάζουσιν ὑμᾶς περιτέμνεσθαι, μόνον ἵνα τῷ σταυρῷ τοῦ Χριστοῦ μὴ διώκωνται.}
+  {Des gens désireux de se faire remarquer dans l’ordre de la chair, voilà les gens qui vous imposent la circoncision. Leur seul but est de ne pas être persécutés à cause de la croix du Christ;}
+  \verset
+  {οὐδὲ γὰρ οἱ περιτεμνόμενοι αὐτοὶ νόμον φυλάσσουσιν ἀλλὰ θέλουσιν ὑμᾶς περιτέμνεσθαι, ἵνα ἐν τῇ ὑμετέρᾳ σαρκὶ καυχήσωνται.}
+  {car, ceux-là mêmes qui se font circoncire n’observent pas la loi; ils veulent néanmoins que vous soyez circoncis, afin de tirer fierté de votre chair.}
+  \verset
+  {Ἐμοὶ δὲ μὴ γένοιτο καυχᾶσθαι εἰ μὴ ἐν τῷ σταυρῷ τοῦ κυρίου ἡμῶν Ἰησοῦ Χριστοῦ, δι’ οὗ ἐμοὶ κόσμος ἐσταύρωται κἀγὼ κόσμῳ.}
+  {Pour moi, non, jamais d’autre fierté que la croix de notre Seigneur Jésus Christ; par elle, le monde est crucifié pour moi, comme moi pour le monde.}
+  \verset
+  {οὔτε γὰρ περιτομή τί ἐστιν οὔτε ἀκροβυστία ἀλλὰ καινὴ κτίσις.}
+  {Car, ce qui importe, ce n’est ni la circoncision, ni l’incirconcision, mais la nouvelle création.}
+  \verset
+  {καὶ ὅσοι τῷ κανόνι τούτῳ στοιχήσουσιν, εἰρήνη ἐπ’ αὐτοὺς καὶ ἔλεος καὶ ἐπὶ τὸν Ἰσραὴλ τοῦ θεοῦ.}
+  {Sur ceux qui se conduisent selon cette règle, paix et miséricorde, ainsi que sur l’Israël de Dieu.}
+  \verset
+  {Τοῦ λοιποῦ κόπους μοι μηδεὶς παρεχέτω· ἐγὼ γὰρ τὰ στίγματα τοῦ Ἰησοῦ ἐν τῷ σώματί μου βαστάζω.}
+  {Dès lors, que personne ne me cause de tourments; car moi, je porte en mon corps les marques de Jésus.}
+  \verset
+  {Ἡ χάρις τοῦ κυρίου ἡμῶν Ἰησοῦ Χριστοῦ μετὰ τοῦ πνεύματος ὑμῶν, ἀδελφοί· ἀμήν.}
+  {Que la grâce de notre Seigneur Jésus Christ soit avec votre esprit, frères. Amen.}
+
+\end{paracol}
+\end{document}
