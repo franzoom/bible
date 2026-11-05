@@ -39,11 +39,14 @@
 \newcommand{\chapitre}[1]{\setcounter{chapitre}{#1}\setcounter{verset}{0}}
 \newcommand{\pagegauche}{\clearpage\ifodd\value{page}\thispagestyle{empty}\null\clearpage\fi}
 % numéro du verset, précédé du numéro de chapitre au verset 1
-% et au premier verset qui suit une section ou une sous-section
-% (\textdir TLT : les chiffres restent dans le bon sens dans une colonne de droite à gauche)
-\newcommand{\numverset}{{\textdir TLT\fontspec{Linux Libertine}\color{\pscolor}%
+% et au premier verset qui suit une section ou une sous-section.
+% Le tout occupe la marge \psleftmargin : le chapitre est calé sur le bord de la page (aligné
+% avec les titres) et le verset contre le texte. De droite à gauche, ce placement s'inverse.
+% (\textdir TLT sur chaque nombre : ses chiffres restent dans le bon sens)
+\newcommand{\numverset}{\hbox to \psleftmargin{{\fontspec{Linux Libertine}\color{\pscolor}%
   \ifnum\value{verset}=1 \rappelchapitretrue\fi
-  \ifrappelchapitre\arabic{chapitre}\,\fi{\small\textsuperscript{\arabic{verset}}}}}
+  \ifrappelchapitre{\textdir TLT\arabic{chapitre}}\fi\hfil
+  {\textdir TLT\small\textsuperscript{\arabic{verset}}}}\hspace{\pslabelsep}}}
 
 % --- mécanique interne (pas besoin d'y toucher) ---
 \makeatletter
@@ -59,8 +62,7 @@
   \setlength{\leftskip}{\dimexpr\psleftmargin+\indentunit*\verset@niv\relax}%
   \hangindent\versethang \hangafter\@ne
   \ifverset@premiere \verset@premierefalse
-    \noindent\llap{\numverset\hspace{\pslabelsep}%
-      \hspace{\dimexpr\indentunit*\verset@niv\relax}}%
+    \noindent\llap{\numverset\hspace{\dimexpr\indentunit*\verset@niv\relax}}%
   \fi
   \verset@italique}
 % saute les espaces, puis un / éventuel met la ligne en italique
@@ -95,8 +97,8 @@
   \switchcolumn[1]\versetpar{#2}%
   \global\rappelchapitrefalse}
 \makeatother
-\newcommand{\horsverset}[2]{\switchcolumn[0]*\begin{colonnegauche}#1\par\end{colonnegauche}%
-  \switchcolumn[1]#2\par}
+\newcommand{\horsverset}[2]{\switchcolumn[0]*\begin{colonnegauche}{\setlength{\parskip}{0pt}#1\par}\end{colonnegauche}%
+  \switchcolumn[1]{\setlength{\parskip}{0pt}#2\par}}
 
 % compteurs communs aux deux colonnes (paracol les sépare par défaut)
 \globalcounter{chapitre}
