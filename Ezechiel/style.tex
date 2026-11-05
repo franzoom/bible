@@ -6,17 +6,6 @@
 \def \parSpace{\vskip 1.2em}
 \def \decalage{\hspace*{0.5cm}~}
 
-% ===== À AJOUTER DANS LE PRÉAMBULE DU DOCUMENT PRINCIPAL =====
-% (remplace \def \decalage{\hspace*{0.5cm}~})
-\newlength{\indentunit}
-\setlength{\indentunit}{0.5cm}
-\newlength{\curindent}
-\setlength{\curindent}{0pt}
-\newcommand{\indentlvl}[1]{\setlength{\curindent}{#1\indentunit}\hspace*{\curindent}}
-\newcommand{\brk}{\\
-\hspace*{\curindent}} % remplace \\ dans les paragraphes indentés
-% ==============================================================
-\def \pscolor{red} %couleur de la numérotation des versets
 \usepackage{titlesec} %gestion des formats de titre
 \usepackage{geometry}
 \usepackage{xcolor}
@@ -41,6 +30,7 @@
 
 \usepackage{mdframed} %pour faire des lignes verticales
 \newmdenv[ %config de l'environnement de mdframes pour avoir une barre vertical à gauche du texte
+  usetwoside=false, %sinon la marge change de côté sur les pages paires
   topline=false,
   bottomline=false,
   rightline=false,
@@ -54,15 +44,18 @@
 
 
 \geometry{
-  twoside=false,
   left=10mm,
   right=10mm,
   top=15mm,
   bottom=15mm
 }
 
+\raggedbottom % sinon twoside étire les pages pour les remplir jusqu'en bas
+
 \titleformat{\section}
-{\Large\bfseries\scshape}{\thesection}{5em}{}
+{\Large\bfseries\scshape\global\rappelchapitretrue}{\thesection}{5em}{}
+\titleformat{\subsection}
+{\normalfont\large\bfseries\global\rappelchapitretrue}{\thesubsection}{1em}{}
 
 
 %%%gestion de en-tête et pieds de page
@@ -70,3 +63,7 @@
 \fancyhf{} % Efface les en-têtes et pieds de page par défaut
 \fancyfoot[R]{\footnotesize{page \thepage}} % Affiche le numéro de page centré dans le pied de page
 \renewcommand{\headrulewidth}{0pt} % Supprime la ligne horizontale en haut de chaque page
+
+%%%%% versets : \verset{hébreu}{français} (voir la syntaxe dans ce fichier) %%%%%
+\input{../assets/versets.tex}
+\renewenvironment{colonnegauche}{\begin{hebrew}}{\end{hebrew}}
