@@ -5,7 +5,6 @@
 \usepackage{geometry}
 \usepackage{fancyhdr}
 \usepackage{titlesec} %gestion des formats de titre
-\usepackage{paracol}
 
 \usepackage{fontspec}
 \usepackage{polyglossia}
@@ -22,7 +21,6 @@
 
 %%%%% titres (n'apparaissent que du côté français) %%%%%
 % \section*{...}, \subsection*{...}, \subsubsection*{...}
-\newif\ifrappelchapitre % vrai après une section ou une sous-section : le verset suivant rappelle le chapitre
 \titleformat{\section}
 {\Large\bfseries\scshape\filcenter\global\rappelchapitretrue}{\thesection}{5em}{}
 \titleformat{\subsection}
@@ -36,80 +34,8 @@
 
 \setlength{\parindent}{0pt}
 
-%%%%% versets : \verset{grec}{français} %%%%%
-% À l'intérieur de \verset, chaque ligne du fichier est une ligne du PDF.
-% Les > en début de ligne donnent le niveau d'indentation :
-%   \verset
-%     {Παῦλος ἀπόστολος
-%      > οὐκ ἀπ’ ἀνθρώπων
-%      >> διὰ Ἰησοῦ Χριστοῦ}
-%     {Paul, apôtre,
-%      > non de la part des hommes,
-%      >> par Jésus Christ}
-% Les deux textes commencent à la même hauteur (synchronisation paracol).
-\def \pscolor{red} %couleur de la numérotation des versets
-\def \pslabelsep{0.3em} %distance entre le numéro de verset et le texte
-\def \psleftmargin{1.5em} %marge à gauche du texte des versets
-\newlength{\indentunit}
-\setlength{\indentunit}{0.5cm} %largeur d'un niveau d'indentation (un >)
-\newlength{\versethang}
-\setlength{\versethang}{1em} %retrait en plus quand une ligne trop longue se replie
-\newcounter{chapitre}
-\newcounter{verset}
-% \chapitre{n} : n'affiche rien, remet les versets à 1 et sert au numéro rouge du verset 1
-\newcommand{\chapitre}[1]{\setcounter{chapitre}{#1}\setcounter{verset}{0}}
-% numéro du verset, précédé du numéro de chapitre au verset 1
-% et au premier verset qui suit une section ou une sous-section
-\newcommand{\numverset}{{\fontspec{Linux Libertine}\color{\pscolor}%
-  \ifnum\value{verset}=1 \rappelchapitretrue\fi
-  \ifrappelchapitre\arabic{chapitre}\,\fi{\small\textsuperscript{\arabic{verset}}}}}
-
-% --- mécanique interne (pas besoin d'y toucher) ---
-\makeatletter
-\newcount\verset@niv
-\newif\ifverset@premiere
-% compte les > au début d'une ligne, puis applique le niveau
-\def\verset@niveau{\verset@niv=0 \verset@compte}
-\def\verset@compte{\futurelet\verset@suivant\verset@compteB}
-\def\verset@compteB{\ifx\verset@suivant>\expandafter\verset@plus
-  \else\expandafter\verset@applique\fi}
-\def\verset@plus>{\advance\verset@niv\@ne \verset@compte}
-\def\verset@applique{%
-  \setlength{\leftskip}{\dimexpr\psleftmargin+\indentunit*\verset@niv\relax}%
-  \hangindent\versethang \hangafter\@ne
-  \ifverset@premiere \verset@premierefalse
-    \noindent\llap{\numverset\hspace{\pslabelsep}%
-      \hspace{\dimexpr\indentunit*\verset@niv\relax}}%
-  \fi
-  \ignorespaces}
-% saute les fins de ligne et les espaces avant un argument
-\def\verset@saute#1{\def\verset@apres{#1}\verset@sauteB}
-\def\verset@sauteB{\futurelet\verset@suivant\verset@sauteC}
-\def\verset@sauteC{%
-  \ifx\verset@suivant\verset@nl \expandafter\verset@mange
-  \else\ifx\verset@suivant\@sptoken \expandafter\expandafter\expandafter\verset@mangeespace
-  \else \expandafter\expandafter\expandafter\verset@apres\fi\fi}
-\def\verset@mange#1{\verset@sauteB}
-\def\verset@mangeespace{\afterassignment\verset@sauteB\let\verset@tmp= }
-% fin de ligne dans un verset : nouvelle ligne, puis lecture du niveau
-\def\verset@nl{\par\verset@niveau}
-\begingroup
-\catcode`\^^M=\active%
-\gdef\verset@lignes{\catcode`\^^M=\active\let^^M\verset@nl}%
-\gdef\versetpar#1{{\setlength{\parskip}{0pt}\let^^M\verset@nl%
-  \verset@premieretrue\verset@niveau#1\par}}%
-\endgroup
-\newcommand{\verset}{\begingroup\verset@lignes\verset@saute\verset@lireA}
-\def\verset@lireA#1{\verset@saute{\verset@lireB{#1}}}
-\def\verset@lireB#1#2{\endgroup\stepcounter{verset}%
-  \switchcolumn[0]*\versetpar{#1}%
-  \switchcolumn[1]\versetpar{#2}%
-  \global\rappelchapitrefalse}
-\makeatother
-
-% compteurs communs aux deux colonnes (paracol les sépare par défaut)
-\globalcounter{chapitre}
-\globalcounter{verset}
+%%%%% versets : \verset{grec}{français} (voir la syntaxe dans ce fichier) %%%%%
+\input{../assets/versets.tex}
 
 \begin{document}
 
@@ -118,7 +44,7 @@
 \renewcommand{\headrulewidth}{0pt} % Supprime la ligne horizontale en haut de chaque page
 
 % page 1 blanche : le grec doit commencer sur une page paire (à gauche)
-\thispagestyle{empty}\null\newpage
+\pagegauche
 
 % [1]*{2} : la colonne 0 (grec) va sur la page de gauche,
 % la colonne 1 (TOB) sur la page de droite en vis-à-vis
@@ -137,7 +63,7 @@
     > ἀλλὰ
     >> διὰ Ἰησοῦ Χριστοῦ
     >> καὶ θεοῦ πατρὸς τοῦ
-    >>> ἐγείραντος τὸν ἐκ νεκρῶν,}
+    >>> ἐγείραντος αὐτὸν ἐκ νεκρῶν,}
   {Paul, apôtre,
     > non de la part des hommes,
     > ni par un homme,
@@ -219,7 +145,7 @@
     > n’est pas de l’homme;}
   \verset
   {οὐδὲ γὰρ ἐγὼ παρὰ ἀνθρώπου
-    > παρέλαβον αὐτὸ οὔτε ἐδιδάχθην
+    > παρέλαβον αὐτὸ οὔτε ἐδιδάχθην,
     >> ἀλλὰ δι’ ἀποκαλύψεως Ἰησοῦ Χριστοῦ.}
   {et d’ailleurs, ce n’est pas par un homme
     > qu’il m’a été transmis ni enseigné,

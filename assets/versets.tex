@@ -1,0 +1,103 @@
+% Macros communes aux textes en vis-à-vis (Galates, Ézéchiel) :
+% langue originale sur les pages de gauche, français sur les pages de droite,
+% synchronisés verset par verset grâce au paquet paracol.
+% À inclure dans le préambule : \input{../assets/versets.tex}
+\usepackage{paracol}
+
+%%%%% versets : \verset{langue originale}{français} %%%%%
+% À l'intérieur de \verset, chaque ligne du fichier est une ligne du PDF.
+% Les > en début de ligne donnent le niveau d'indentation,
+% et un / après les > met toute la ligne en italique :
+%   \verset
+%     {Παῦλος ἀπόστολος
+%      > οὐκ ἀπ’ ἀνθρώπων
+%      >> διὰ Ἰησοῦ Χριστοῦ}
+%     {Paul, apôtre,
+%      > non de la part des hommes,
+%      >> / par Jésus Christ}
+% Les deux textes commencent à la même hauteur (synchronisation paracol).
+% \horsverset{langue originale}{français} : même chose, sans numéro de verset ni indentation.
+% \chapitre{n} : n'affiche rien, remet les versets à 1 et sert au numéro rouge du verset 1.
+% \pagegauche : passe à la prochaine page paire, à utiliser juste avant \begin{paracol}[1]*{2}.
+%
+% Pour une langue écrite de droite à gauche, redéfinir l'environnement colonnegauche :
+%   \renewenvironment{colonnegauche}{\begin{hebrew}}{\end{hebrew}}
+\newenvironment{colonnegauche}{}{}
+
+\def \pscolor{red} %couleur de la numérotation des versets
+\def \pslabelsep{0.3em} %distance entre le numéro de verset et le texte
+\def \psleftmargin{1.5em} %marge à gauche du texte des versets
+\newlength{\indentunit}
+\setlength{\indentunit}{0.5cm} %largeur d'un niveau d'indentation (un >)
+\newlength{\versethang}
+\setlength{\versethang}{1em} %retrait en plus quand une ligne trop longue se replie
+\newcounter{chapitre}
+\newcounter{verset}
+% vrai après une section ou une sous-section : le verset suivant rappelle le chapitre
+% (à activer avec \global\rappelchapitretrue dans le \titleformat du document)
+\newif\ifrappelchapitre
+\newcommand{\chapitre}[1]{\setcounter{chapitre}{#1}\setcounter{verset}{0}}
+\newcommand{\pagegauche}{\clearpage\ifodd\value{page}\thispagestyle{empty}\null\clearpage\fi}
+% numéro du verset, précédé du numéro de chapitre au verset 1
+% et au premier verset qui suit une section ou une sous-section
+% (\textdir TLT : les chiffres restent dans le bon sens dans une colonne de droite à gauche)
+\newcommand{\numverset}{{\textdir TLT\fontspec{Linux Libertine}\color{\pscolor}%
+  \ifnum\value{verset}=1 \rappelchapitretrue\fi
+  \ifrappelchapitre\arabic{chapitre}\,\fi{\small\textsuperscript{\arabic{verset}}}}}
+
+% --- mécanique interne (pas besoin d'y toucher) ---
+\makeatletter
+\newcount\verset@niv
+\newif\ifverset@premiere
+% compte les > au début d'une ligne, puis applique le niveau
+\def\verset@niveau{\verset@niv=0 \verset@compte}
+\def\verset@compte{\futurelet\verset@suivant\verset@compteB}
+\def\verset@compteB{\ifx\verset@suivant>\expandafter\verset@plus
+  \else\expandafter\verset@applique\fi}
+\def\verset@plus>{\advance\verset@niv\@ne \verset@compte}
+\def\verset@applique{%
+  \setlength{\leftskip}{\dimexpr\psleftmargin+\indentunit*\verset@niv\relax}%
+  \hangindent\versethang \hangafter\@ne
+  \ifverset@premiere \verset@premierefalse
+    \noindent\llap{\numverset\hspace{\pslabelsep}%
+      \hspace{\dimexpr\indentunit*\verset@niv\relax}}%
+  \fi
+  \verset@italique}
+% saute les espaces, puis un / éventuel met la ligne en italique
+\def\verset@italique{\futurelet\verset@suivant\verset@italiqueB}
+\def\verset@italiqueB{%
+  \ifx\verset@suivant\@sptoken \expandafter\verset@italiqueespace
+  \else\ifx\verset@suivant/\expandafter\expandafter\expandafter\verset@italiquebarre
+  \else \expandafter\expandafter\expandafter\ignorespaces\fi\fi}
+\def\verset@italiqueespace{\afterassignment\verset@italique\let\verset@tmp= }
+\def\verset@italiquebarre/{\itshape\ignorespaces}
+% saute les fins de ligne et les espaces avant un argument
+\def\verset@saute#1{\def\verset@apres{#1}\verset@sauteB}
+\def\verset@sauteB{\futurelet\verset@suivant\verset@sauteC}
+\def\verset@sauteC{%
+  \ifx\verset@suivant\verset@nl \expandafter\verset@mange
+  \else\ifx\verset@suivant\@sptoken \expandafter\expandafter\expandafter\verset@mangeespace
+  \else \expandafter\expandafter\expandafter\verset@apres\fi\fi}
+\def\verset@mange#1{\verset@sauteB}
+\def\verset@mangeespace{\afterassignment\verset@sauteB\let\verset@tmp= }
+% fin de ligne dans un verset : nouvelle ligne (l'italique s'arrête), puis lecture du niveau
+\def\verset@nl{\par\upshape\verset@niveau}
+\begingroup
+\catcode`\^^M=\active%
+\gdef\verset@lignes{\catcode`\^^M=\active\let^^M\verset@nl}%
+\gdef\versetpar#1{{\setlength{\parskip}{0pt}\let^^M\verset@nl%
+  \verset@premieretrue\verset@niveau#1\par}}%
+\endgroup
+\newcommand{\verset}{\begingroup\verset@lignes\verset@saute\verset@lireA}
+\def\verset@lireA#1{\verset@saute{\verset@lireB{#1}}}
+\def\verset@lireB#1#2{\endgroup\stepcounter{verset}%
+  \switchcolumn[0]*\begin{colonnegauche}\versetpar{#1}\end{colonnegauche}%
+  \switchcolumn[1]\versetpar{#2}%
+  \global\rappelchapitrefalse}
+\makeatother
+\newcommand{\horsverset}[2]{\switchcolumn[0]*\begin{colonnegauche}#1\par\end{colonnegauche}%
+  \switchcolumn[1]#2\par}
+
+% compteurs communs aux deux colonnes (paracol les sépare par défaut)
+\globalcounter{chapitre}
+\globalcounter{verset}
